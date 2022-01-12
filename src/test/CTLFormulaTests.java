@@ -34,4 +34,22 @@ public class CTLFormulaTests {
 
         assertEquals("[Operator{operator='E'}, q, Operator{operator='X'}, r]", result.toString());
     }
+
+    @Test
+    public void testFormula4() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("Aq");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='A'}, q]", result.toString());
+    }
+
+    @Test
+    public void testFormula5() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("!(Eq\\/q1)");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='!'}, [Operator{operator='E'}, Operator{operator='\\/'}, q, q1]]", result.toString());
+    }
 }
