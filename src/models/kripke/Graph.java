@@ -21,11 +21,6 @@ public class Graph {
                 state.addFormulae(prop);
             }
         }
-        /*
-        for (State state : this.states) {
-            System.out.println(state.toString());
-        }
-        */
     }
 
     private void readFile(String filePath) {
