@@ -50,6 +50,23 @@ public abstract class CTLParser {
         return result;
     }
 
+    public static boolean checkFormulaValidity(List<Object> formula) {
+        boolean valid = true;
+
+        int counter = 0;
+        for (Object element : formula) {
+            if ("(".equals(element) || ")".equals(element)) {
+                counter++;
+            }
+        }
+
+        if (counter % 2 != 0) {
+            valid = false;
+        }
+
+        return valid;
+    }
+
     public static List<Object> parseCTLFormula(List<Object> formula) {
         // System.out.printf("Evaluating %s\n", formula);
 
