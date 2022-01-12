@@ -10,13 +10,12 @@ public class State {
     private List<State> successors;
     private List<String> formulae;
 
-
-
     public State(String name){
         this.name = name;
         this.propositions = new ArrayList<>();
         this.predecessors = new ArrayList<>();
         this.successors = new ArrayList<>();
+        this.formulae = new ArrayList<>();
     }
 
     public void addProposition(String expression){
@@ -76,16 +75,16 @@ public class State {
 
     public String displayPredecessors() {
         StringBuilder names = new StringBuilder();
-        for (State s : this.predecessors){
-            names.append(s.getName()).append(" ");
+        for (State state : this.predecessors){
+            names.append(state.getName()).append(" ");
         }
         return String.valueOf(names);
     }
 
     public String displaySuccessors() {
         StringBuilder names = new StringBuilder();
-        for (State s : this.successors){
-            names.append(s.getName()).append(" ");
+        for (State state : this.successors){
+            names.append(state.getName()).append(" ");
         }
         return String.valueOf(names);
     }
@@ -95,6 +94,7 @@ public class State {
         return "State{" +
                 "name='" + name + '\'' +
                 ", propositions=" + propositions +
+                ", formulae=" + formulae +
                 ", predecessors=" + displayPredecessors() +
                 ", successors=" + displaySuccessors() +
                 '}';
