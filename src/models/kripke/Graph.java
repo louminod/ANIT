@@ -16,11 +16,16 @@ public class Graph {
         states = new ArrayList<>();
         readFile(filePath);
         findPredecessors();
-        /*
-        for (State s : this.states) {
-            System.out.println(s.toString());
+        for (State state : this.states) {
+            for (String prop : state.getPropositions()) {
+                state.addFormulae(prop);
+            }
         }
-         */
+        /*
+        for (State state : this.states) {
+            System.out.println(state.toString());
+        }
+        */
     }
 
     private void readFile(String filePath) {
@@ -54,18 +59,18 @@ public class Graph {
     }
 
     private State findStateUsingName(String name) {
-        for(State s : this.states){
-            if (s.getName().equals(name)){
-                return  s;
+        for(State state : this.states){
+            if (state.getName().equals(name)){
+                return state;
             }
         }
         return null;
     }
 
     private void findPredecessors() {
-        for (State s : this.states) {
-            for (State successor : s.getSuccessors()) {
-                successor.addPredecessor(s);
+        for (State state : this.states) {
+            for (State successor : state.getSuccessors()) {
+                successor.addPredecessor(state);
             }
         }
     }
