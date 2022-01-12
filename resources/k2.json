@@ -1,0 +1,50 @@
+{
+  "initial": "S0",
+  "states":[
+    {
+      "name":"S0",
+      "propositions":["a","b", "c","d"],
+      "successors":["S1", "S2", "S3"]
+    },
+    {
+      "name":"S1",
+      "propositions":["!a","b", "!c","d"],
+      "successors":["S4"]
+    },
+    {
+      "name":"S2",
+      "propositions":["a","!b", "c","!d"],
+      "successors":["S3"]
+    },
+    {
+      "name":"S3",
+      "propositions":["!a","b", "c","!d"],
+      "successors":["S1", "S5"]
+    },
+    {
+      "name":"S4",
+      "propositions":["!a","!b", "!c","d"],
+      "successors":["S6"]
+    },
+    {
+      "name":"S5",
+      "propositions":["!a","!b", "!c","!d"],
+      "successors":["S7"]
+    },
+    {
+      "name":"S6",
+      "propositions":["a","b", "!c","d"],
+      "successors":["S8"]
+    },
+    {
+      "name":"S7",
+      "propositions":["a","b", "!c","d"],
+      "successors":["S6"]
+    },
+    {
+      "name":"S8",
+      "propositions":["a","b", "c","d"],
+      "successors":[]
+    }
+  ]
+}
