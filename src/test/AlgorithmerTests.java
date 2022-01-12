@@ -5,6 +5,7 @@ import models.kripke.Graph;
 import models.kripke.State;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlgorithmerTests {
@@ -45,6 +46,35 @@ public class AlgorithmerTests {
 
         List<State> result = Algorithmer.or(graph, "a", "!c");
         List<State> expected = graph.getStates().subList(1,3);
+
+        assert (result.containsAll(expected));
+    }
+
+    @Test
+    public void testEX(){
+        Graph graph = new Graph("resources/k2.json");
+
+        List<State> result = Algorithmer.EX(graph, "a");
+        List<State> expected = new ArrayList<>();
+        expected.add(graph.getStates().get(0));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+        expected.add(graph.getStates().get(6));
+        expected.add(graph.getStates().get(7));
+
+        assert (result.containsAll(expected));
+    }
+
+    @Test
+    public void testAX(){
+        Graph graph = new Graph("resources/k2.json");
+
+        List<State> result = Algorithmer.AX(graph, "a");
+        List<State> expected = new ArrayList<>();
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+        expected.add(graph.getStates().get(6));
+        expected.add(graph.getStates().get(7));
 
         assert (result.containsAll(expected));
     }
