@@ -6,7 +6,6 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello ANIT");
-        Graph graph = new Graph("resources/k1.json");
 
         List<Object> formula = CTLParser.parseStringFormula("!(a\\/b)");
 
