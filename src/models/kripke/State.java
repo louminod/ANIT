@@ -8,6 +8,9 @@ public class State {
     private List<String> propositions;
     private List<State> predecessors;
     private List<State> successors;
+    private List<String> formulae;
+
+
 
     public State(String name){
         this.name = name;
@@ -59,4 +62,14 @@ public class State {
     public void setSuccessors(List<State> successors) {
         this.successors = successors;
     }
+
+    public List<String> getFormulae() {
+        return formulae;
+    }
+
+    public void setFormulae(List<String> formulae) {
+        this.formulae = formulae;
+    }
+
+    public void addFormulae(String formulae) { this.formulae.add(formulae); }
 }
