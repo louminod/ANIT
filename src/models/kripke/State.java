@@ -59,4 +59,32 @@ public class State {
     public void setSuccessors(List<State> successors) {
         this.successors = successors;
     }
+
+
+    public String displayPredecessors() {
+        StringBuilder names = new StringBuilder();
+        for (State s : this.predecessors){
+            names.append(s.getName()).append(" ");
+        }
+        return String.valueOf(names);
+    }
+
+    public String displaySuccessors() {
+        StringBuilder names = new StringBuilder();
+        for (State s : this.successors){
+            names.append(s.getName()).append(" ");
+        }
+        return String.valueOf(names);
+    }
+
+    @Override
+    public String toString() {
+        return "State{" +
+                "name='" + name + '\'' +
+                ", propositions=" + propositions +
+                ", predecessors=" + displayPredecessors() +
+                ", successors=" + displaySuccessors() +
+                '}';
+    }
+
 }

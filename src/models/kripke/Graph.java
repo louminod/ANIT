@@ -2,8 +2,6 @@ package models.kripke;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,12 +12,18 @@ public class Graph {
     private List<State> states;
     private State initial;
 
-    public Graph(String filePath){
+    public Graph(String filePath) {
         states = new ArrayList<>();
         readFile(filePath);
+        findPredecessors();
+        /*
+        for (State s : this.states) {
+            System.out.println(s.toString());
+        }
+         */
     }
 
-    private void readFile(String filePath){
+    private void readFile(String filePath) {
         try {
             String text = Files.readString(Paths.get(filePath));
             JSONObject obj = new JSONObject(text);
@@ -35,13 +39,13 @@ public class Graph {
             JSONArray states_definitions = obj.getJSONArray("states");
             for (int i = 0; i < states_definitions.length(); i++){
                 JSONObject state = states_definitions.getJSONObject(i);
-                JSONArray successors = state.getJSONArray("successors");
-                for (int j = 0; j < successors.length(); j++){
-                    this.states.get(i).addSuccessor(findStateUsingName(successors.getString(j)));
-                }
                 JSONArray propositions = state.getJSONArray("propositions");
                 for (int j = 0; j < propositions.length(); j++){
                     this.states.get(i).addProposition(propositions.getString(j));
+                }
+                JSONArray successors = state.getJSONArray("successors");
+                for (int j = 0; j < successors.length(); j++){
+                    this.states.get(i).addSuccessor(findStateUsingName(successors.getString(j)));
                 }
             }
         } catch (IOException e) {
@@ -49,13 +53,21 @@ public class Graph {
         }
     }
 
-    private State findStateUsingName(String name){
+    private State findStateUsingName(String name) {
         for(State s : this.states){
             if (s.getName().equals(name)){
                 return  s;
             }
         }
         return null;
+    }
+
+    private void findPredecessors() {
+        for (State s : this.states) {
+            for (State successor : s.getSuccessors()) {
+                successor.addPredecessor(s);
+            }
+        }
     }
 
     public List<State> getStates() {
