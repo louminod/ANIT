@@ -1,0 +1,20 @@
+{
+  "initial": "S0",
+  "states":[
+    {
+      "name":"S0",
+      "propositions":["!a","b", "c"],
+      "successors":["S1", "S2"]
+    },
+    {
+      "name":"S1",
+      "propositions":["a", "b", "!c"],
+      "successors":["S2"]
+    },
+    {
+      "name":"S2",
+      "propositions":["!a", "b", "!c"],
+      "successors":["S0"]
+    }
+  ]
+}
