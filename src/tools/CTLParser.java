@@ -2,7 +2,6 @@ package tools;
 
 import models.Operator;
 import models.enums.CTLOperator;
-import models.kripke.State;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,7 +41,7 @@ public abstract class CTLParser {
                         stop = true;
                     }
                 }
-                result.add(new State(state.toString()));
+                result.add(state.toString());
             }
             index++;
         }
