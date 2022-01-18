@@ -13,21 +13,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CTLFormulaTests {
     @Test
     public void testFormula1() {
-        List<Object> parsedFormula = CTLParser.parseStringFormula("!(Q3\\/(Q1/\\Q2))");
+        List<Object> parsedFormula = CTLParser.parseStringFormula("%(Q3\\/(Q1/\\Q2))");
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        System.out.println(result);
 
         assertEquals(Operator.class, result.get(0).getClass());
         assertEquals(ArrayList.class, result.get(1).getClass());
         assertEquals(Operator.class, ((ArrayList<Object>) result.get(1)).get(0).getClass());
-        assertEquals(State.class, ((ArrayList<Object>) result.get(1)).get(1).getClass());
-        assertEquals("Q3", ((State) ((ArrayList<Object>) result.get(1)).get(1)).getName());
+        assertEquals("Q3", ((ArrayList<Object>) result.get(1)).get(1));
         assertEquals(ArrayList.class, ((ArrayList<Object>) result.get(1)).get(2).getClass());
         assertEquals(Operator.class, ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(0).getClass());
-        assertEquals(State.class, ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(1).getClass());
-        assertEquals("Q1", ((State) ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(1)).getName());
-        assertEquals(State.class, ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(2).getClass());
-        assertEquals("Q2", ((State) ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(2)).getName());
+        assertEquals("Q1", ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(1));
+        assertEquals("Q2", ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(2));
     }
 
     @Test
@@ -37,10 +36,8 @@ public class CTLFormulaTests {
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
         assertEquals(Operator.class, result.get(0).getClass());
-        assertEquals(State.class, result.get(1).getClass());
-        assertEquals("a", ((State) result.get(1)).getName());
-        assertEquals(State.class, result.get(2).getClass());
-        assertEquals("b", ((State) result.get(2)).getName());
+        assertEquals("a", result.get(1));
+        assertEquals("b", result.get(2));
     }
 
     @Test
@@ -51,13 +48,12 @@ public class CTLFormulaTests {
 
         assertEquals(Operator.class, result.get(0).getClass());
         assertEquals(Operator.class, result.get(1).getClass());
-        assertEquals(State.class, result.get(2).getClass());
-        assertEquals("a", ((State) result.get(2)).getName());
+        assertEquals("a", result.get(2));
     }
 
     @Test
     public void testFormulaValidityIsNotCorrect() {
-        List<Object> parsedFormula = CTLParser.parseStringFormula("!(a\\/b");
+        List<Object> parsedFormula = CTLParser.parseStringFormula("%(a\\/b");
 
         boolean valid = CTLParser.checkFormulaValidity(parsedFormula);
 
@@ -66,7 +62,7 @@ public class CTLFormulaTests {
 
     @Test
     public void testFormulaValidityIsCorrect() {
-        List<Object> parsedFormula = CTLParser.parseStringFormula("!(a\\/b)");
+        List<Object> parsedFormula = CTLParser.parseStringFormula("%(a\\/b)");
 
         boolean valid = CTLParser.checkFormulaValidity(parsedFormula);
 
