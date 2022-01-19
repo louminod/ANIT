@@ -103,7 +103,7 @@ public class Algorithmer {
 
     public static List<State> EU(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
-        List<State> l = marking(graph, prop2);
+        List<State> L = marking(graph, prop2);
         List<State> seenBefore = marking(graph, prop2);
         State s;
 
@@ -112,11 +112,11 @@ public class Algorithmer {
             L.remove(0);
             s.addFormulae(String.format("E %s U %s", prop1, prop2));
             result.add(s);
-            for (State predecessor: s.getPredecessors()) {
+            for (State predecessor : s.getPredecessors()) {
                 if (!seenBefore.contains(predecessor)) {
                     seenBefore.add(predecessor);
                     if (predecessor.getFormulae().contains(prop1)) {
-                        l.add(predecessor);
+                        L.add(predecessor);
                     }
                 }
             }
@@ -150,7 +150,7 @@ public class Algorithmer {
     }
 
     public static List<State> run(Graph graph, List<Object> formula) {
-        System.out.println("formula : " + formula);
+        // System.out.println("formula to run : " + formula);
 
         Operator operator = (Operator) formula.get(0);
 
@@ -163,7 +163,6 @@ public class Algorithmer {
             } else {
                 first = (String) formula.get(1);
             }
-
         }
 
         Object second = null;
@@ -218,6 +217,10 @@ public class Algorithmer {
             case "%":
                 if (first instanceof Boolean) {
                     if (!(Boolean) first) {
+                        result.add(new State("result"));
+                    }
+                } else if (first instanceof ArrayList) {
+                    if (run(graph, (List<Object>) first).isEmpty()) {
                         result.add(new State("result"));
                     }
                 } else {
