@@ -141,7 +141,6 @@ public class Algorithmer {
                     listStateProp2.add(predecessor);
                 }
             }
-
         }
 
         return result;
@@ -149,6 +148,19 @@ public class Algorithmer {
 
     public static List<State> EF(Graph graph, String prop) {
         List<State> result = new ArrayList<>();
+        List<State> L = marking(graph, prop);
+
+        while (!L.isEmpty()) {
+            State state = L.get(0);
+            L.remove(0);
+            result.add(state);
+            state.addFormulae(String.format("E F %s", prop));
+            for (State predecessor : state.getPredecessors()) {
+                if (!L.contains(predecessor) && !result.contains(predecessor)) {
+                    L.add(predecessor);
+                }
+            }
+        }
 
         return result;
     }
