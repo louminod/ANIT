@@ -11,7 +11,7 @@ import java.util.List;
 public class AlgorithmerTests {
 
     @Test
-    public void testMarkingA(){
+    public void testMarkingA() {
         Graph graph = new Graph("resources/k1.json");
 
         List<State> resultA = Algorithmer.marking(graph, "a");
@@ -21,7 +21,7 @@ public class AlgorithmerTests {
     }
 
     @Test
-    public void testMarkingB(){
+    public void testMarkingB() {
         Graph graph = new Graph("resources/k1.json");
 
         List<State> resultB = Algorithmer.marking(graph, "b");
@@ -31,27 +31,27 @@ public class AlgorithmerTests {
     }
 
     @Test
-    public void testAnd(){
+    public void testAnd() {
         Graph graph = new Graph("resources/k1.json");
 
         List<State> result = Algorithmer.and(graph, "b", "!c");
-        List<State> expected = graph.getStates().subList(1,3);
+        List<State> expected = graph.getStates().subList(1, 3);
 
         assert (result.containsAll(expected));
     }
 
     @Test
-    public void testOr(){
+    public void testOr() {
         Graph graph = new Graph("resources/k1.json");
 
         List<State> result = Algorithmer.or(graph, "a", "!c");
-        List<State> expected = graph.getStates().subList(1,3);
+        List<State> expected = graph.getStates().subList(1, 3);
 
         assert (result.containsAll(expected));
     }
 
     @Test
-    public void testEX(){
+    public void testEX() {
         Graph graph = new Graph("resources/k2.json");
 
         List<State> result = Algorithmer.EX(graph, "a");
@@ -66,7 +66,7 @@ public class AlgorithmerTests {
     }
 
     @Test
-    public void testAX(){
+    public void testAX() {
         Graph graph = new Graph("resources/k2.json");
 
         List<State> result = Algorithmer.AX(graph, "a");
