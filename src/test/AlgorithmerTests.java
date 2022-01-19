@@ -114,4 +114,39 @@ public class AlgorithmerTests {
         assert (result.containsAll(expected));
         assert (result.size() == expected.size());
     }
+
+    @Test
+    public void testNot(){
+        Graph graph = new Graph("resources/k2.json");
+        List<State> result = Algorithmer.not(graph, "a");
+        List<State> expected = new ArrayList<>();
+
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(5));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
+    }
+
+    @Test
+    public void testEF(){
+        Graph graph = new Graph("resources/k2.json");
+        Algorithmer.not(graph, "b");
+
+        List<State> result = Algorithmer.EF(graph, "not b");
+        List<State> expected = new ArrayList<>();
+
+        expected.add(graph.getStates().get(0));
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(2));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
+
+    }
 }
