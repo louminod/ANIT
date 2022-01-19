@@ -199,14 +199,17 @@ public class Algorithmer {
                 second = !run(graph, (List<Object>) formula.get(2)).isEmpty();
             } else {
                 if (formula.get(2) instanceof ArrayList) {
-                    second = ((ArrayList) formula.get(2)).get(0);
+                    List<Object> sub = (List<Object>) formula.get(2);
+                    if (sub.size() > 0) {
+                        second = ((ArrayList) formula.get(2)).get(0);
+                    }
                 } else {
                     second = (String) formula.get(2);
                 }
             }
         }
 
-        System.out.printf("operator -> %s | first -> %s | second -> %s\n", operator.getOperator(), first, second);
+        // System.out.printf("operator -> %s | first -> %s | second -> %s\n", operator.getOperator(), first, second);
 
         List<State> result = new ArrayList<>();
         switch (operator.getOperator()) {

@@ -18,7 +18,7 @@ public class Main {
         System.out.println("%(a\\/(b/\\c)) -> " + CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(b/\\c))")));
         */
 
-        String input = "%(a\\/(b/\\c))";
+        String input = "EX!a";
         //List<Object> formula = CTLParser.parseStringFormula("%a\\/b");
         List<Object> formula = CTLParser.parseStringFormula(input);
 

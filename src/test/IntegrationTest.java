@@ -14,21 +14,26 @@ public class IntegrationTest {
     public void testFormula1() {
         Graph graph = new Graph("resources/k2.json");
 
-        List<Object> formula = CTLParser.parseStringFormula("%(a\\/(a/\\b))");
-        assertTrue(CTLParser.checkFormulaValidity(formula));
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(a/\\b))"));
 
-        List<Object> parsedFormula = CTLParser.parseCTLFormula(formula);
-        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+        assertTrue(Algorithmer.run(graph, parsedFormula).isEmpty());
     }
 
     @Test
     public void testFormula2() {
         Graph graph = new Graph("resources/k2.json");
 
-        List<Object> formula = CTLParser.parseStringFormula("%a\\/b");
-        assertTrue(CTLParser.checkFormulaValidity(formula));
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%a\\/b"));
 
-        List<Object> parsedFormula = CTLParser.parseCTLFormula(formula);
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula3() {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EX!a"));
+
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
 }
