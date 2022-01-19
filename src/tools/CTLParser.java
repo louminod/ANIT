@@ -97,18 +97,44 @@ public abstract class CTLParser {
                     }
                 }
             } else if (element instanceof Operator) {
+
+                int operatorIndex = i;
+                boolean stop = false;
+                do {
+                    i++;
+                    if (i < formula.size()) {
+                        element = formula.get(i);
+                        if (element instanceof String && element.equals("(")) {
+                            stop = true;
+                        } else if (element instanceof Operator) {
+                            operatorIndex = i;
+                        }
+                    } else {
+                        stop = true;
+                    }
+                } while (!stop);
+
+                i = operatorIndex;
+                element = formula.get(i);
+
                 if ("/\\".equals(((Operator) element).getOperator()) || "\\/".equals(((Operator) element).getOperator())) {
-                    stack.remove(0);
+                    if (!stack.isEmpty()) {
+                        stack.remove(0);
+                    }
                     stack.add(element);
-                    stack.addAll(parseCTLFormula(formula.subList(0, i)));
-                    stack.addAll(parseCTLFormula(formula.subList(i + 1, formula.size())));
+                    List<Object> sub1 = new ArrayList<>();
+                    List<Object> sub2 = new ArrayList<>();
+                    sub1.add(parseCTLFormula(formula.subList(0, i)));
+                    stack.addAll(sub1);
+                    sub2.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
+                    stack.addAll(sub2);
                 } else {
                     stack.add(element);
                     stack.addAll(parseCTLFormula(formula.subList(i + 1, formula.size())));
                 }
 
                 return stack;
-            } else {
+            } else if (element instanceof String) {
                 stack.add(element);
             }
         }
