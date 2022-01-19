@@ -79,20 +79,17 @@ public class Algorithmer {
 
     public static List<State> AX(Graph graph, String prop) {
         List<State> result = new ArrayList<>();
-        boolean one;
-        boolean all;
+        boolean validState;
 
         for (State s : graph.getStates()) {
-            one = false;
-            all = true;
+            validState = true;
             for (State successors : s.getSuccessors()) {
-                if (successors.getFormulae().contains(prop)) {
-                    one = true;
-                } else {
-                    all = false;
+                if (!successors.getFormulae().contains(prop)) {
+                    validState = false;
+                    break;
                 }
             }
-            if (one && all) {
+            if (validState) {
                 result.add(s);
                 s.addFormulae(String.format("A X %s", prop));
             }
