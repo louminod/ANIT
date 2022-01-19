@@ -18,6 +18,7 @@ public class AlgorithmerTests {
         List<State> expectedA = graph.getStates().subList(1, 2);
 
         assert (resultA.containsAll(expectedA));
+        assert (resultA.size() == expectedA.size());
     }
 
     @Test
@@ -28,6 +29,7 @@ public class AlgorithmerTests {
         List<State> expectedB = graph.getStates();
 
         assert (resultB.containsAll(expectedB));
+        assert (resultB.size() == expectedB.size());
     }
 
     @Test
@@ -38,6 +40,7 @@ public class AlgorithmerTests {
         List<State> expected = graph.getStates().subList(1, 3);
 
         assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
     }
 
     @Test
@@ -48,6 +51,7 @@ public class AlgorithmerTests {
         List<State> expected = graph.getStates().subList(1, 3);
 
         assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
     }
 
     @Test
@@ -63,6 +67,7 @@ public class AlgorithmerTests {
         expected.add(graph.getStates().get(7));
 
         assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
     }
 
     @Test
@@ -77,6 +82,7 @@ public class AlgorithmerTests {
         expected.add(graph.getStates().get(7));
 
         assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
     }
 
     @Test
@@ -91,8 +97,21 @@ public class AlgorithmerTests {
         expected.add(graph.getStates().get(3));
         expected.add(graph.getStates().get(7));
 
-        System.out.println(result);
-        System.out.println(expected);
         assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
+    }
+
+
+    @Test
+    public void testAUntil(){
+        Graph graph = new Graph("resources/k3.json");
+
+        List<State> result = Algorithmer.AU(graph, "a", "b");
+        List<State> expected = new ArrayList<>();
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(6));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
     }
 }
