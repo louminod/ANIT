@@ -78,4 +78,21 @@ public class AlgorithmerTests {
 
         assert (result.containsAll(expected));
     }
+
+    @Test
+    public void testEUntil(){
+        Graph graph = new Graph("resources/k3.json");
+
+        List<State> result = Algorithmer.EUntil(graph, "a", "b");
+        List<State> expected = new ArrayList<>();
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(6));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(7));
+
+        System.out.println(result);
+        System.out.println(expected);
+        assert (result.containsAll(expected));
+    }
 }

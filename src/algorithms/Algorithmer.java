@@ -107,12 +107,12 @@ public class Algorithmer {
         List<State> seenBefore = marking(graph, prop2);
         State s;
 
-        while (!l.isEmpty()) {
-            s = l.get(0);
-            l.remove(0);
-            s.addFormulae(String.format("E %s U %s", prop1, prop1));
+        while (!L.isEmpty()) {
+            s = L.get(0);
+            L.remove(0);
+            s.addFormulae(String.format("E %s U %s", prop1, prop2));
             result.add(s);
-            for (State predecessor : s.getSuccessors()) {
+            for (State predecessor: s.getPredecessors()) {
                 if (!seenBefore.contains(predecessor)) {
                     seenBefore.add(predecessor);
                     if (predecessor.getFormulae().contains(prop1)) {
