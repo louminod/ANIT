@@ -98,9 +98,9 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> EU(Graph graph, String prop1, String prop2) {
+    public static List<State> EUntil(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
-        List<State> l = marking(graph, prop2);
+        List<State> L = marking(graph, prop2);
         List<State> seenBefore = marking(graph, prop2);
         State s;
 
@@ -113,7 +113,7 @@ public class Algorithmer {
                 if (!seenBefore.contains(predecessor)) {
                     seenBefore.add(predecessor);
                     if (predecessor.getFormulae().contains(prop1)) {
-                        l.add(predecessor);
+                        L.add(predecessor);
                     }
                 }
             }
@@ -147,22 +147,32 @@ public class Algorithmer {
     }
 
     public static List<State> run(Graph graph, List<Object> formula) {
+        System.out.println("formula : " + formula);
 
         Operator operator = (Operator) formula.get(0);
 
         Object first = null;
-        if (formula.get(1) instanceof ArrayList) {
+        if (formula.get(1) instanceof ArrayList && ((ArrayList) formula.get(1)).size() > 1) {
             first = !run(graph, (List<Object>) formula.get(1)).isEmpty();
         } else {
-            first = (String) formula.get(1);
+            if (formula.get(1) instanceof ArrayList) {
+                first = ((ArrayList) formula.get(1)).get(0);
+            } else {
+                first = (String) formula.get(1);
+            }
+
         }
 
         Object second = null;
         if (formula.size() == 3) {
-            if (formula.get(2) instanceof ArrayList) {
+            if (formula.get(2) instanceof ArrayList && ((ArrayList) formula.get(2)).size() > 1) {
                 second = !run(graph, (List<Object>) formula.get(2)).isEmpty();
             } else {
-                second = (String) formula.get(2);
+                if (formula.get(2) instanceof ArrayList) {
+                    second = ((ArrayList) formula.get(2)).get(0);
+                } else {
+                    second = (String) formula.get(2);
+                }
             }
         }
 
@@ -202,15 +212,13 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.or(graph, (String) first, (String) second);
                 }
-            case "!":
+            case "%":
                 if (first instanceof Boolean) {
                     if (!(Boolean) first) {
                         result.add(new State("result"));
                     }
                 } else {
-                    if (!Algorithmer.marking(graph, (String) first).isEmpty()) {
-                        result.add(new State("result"));
-                    }
+                    result = Algorithmer.not(graph, (String) first);
                 }
         }
         return result;

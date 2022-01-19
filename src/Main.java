@@ -11,11 +11,12 @@ public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph("resources/k2.json");
 
-        List<Object> formula = CTLParser.parseStringFormula("%(a\\/(a/\\b))");
+        List<Object> formula = CTLParser.parseStringFormula("%a\\/b");
+        // List<Object> formula = CTLParser.parseStringFormula("%(a\\/(b/\\c))");
 
         if (CTLParser.checkFormulaValidity(formula)) {
             List<Object> parsedFormula = CTLParser.parseCTLFormula(formula);
-            //System.out.print(parsedFormula + " -> \n");
+            System.out.println("parsed formula -> " + parsedFormula);
 
             //System.out.println(parsedFormula);
 
