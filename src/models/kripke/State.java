@@ -9,6 +9,8 @@ public class State {
     private List<State> predecessors;
     private List<State> successors;
     private List<String> formulae;
+    private int degree;
+
 
     public State(String name){
         this.name = name;
@@ -72,6 +74,14 @@ public class State {
     }
 
     public void addFormulae(String formulae) { this.formulae.add(formulae); }
+
+    public int getDegree() {
+        return degree;
+    }
+
+    public void setDegree(int degree) {
+        this.degree = degree;
+    }
 
     public String displayPredecessors() {
         StringBuilder names = new StringBuilder();

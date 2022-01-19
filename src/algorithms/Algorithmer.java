@@ -124,6 +124,25 @@ public class Algorithmer {
 
     public static List<State> AU(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
+        List<State> listStateProp2 = marking(graph, prop2);
+
+        for (State state : graph.getStates()) {
+            state.setDegree(state.getSuccessors().size());
+        }
+
+        while (!listStateProp2.isEmpty()) {
+            State state = listStateProp2.get(0);
+            listStateProp2.remove(0);
+            result.add(state);
+            state.addFormulae(String.format("A %s U %s", prop1, prop2));
+            for (State predecessor : state.getPredecessors()) {
+                predecessor.setDegree(predecessor.getDegree() - 1);
+                if (predecessor.getDegree() == 0 && predecessor.getFormulae().contains(prop1) && !result.contains(predecessor)) {
+                    listStateProp2.add(predecessor);
+                }
+            }
+
+        }
 
         return result;
     }
