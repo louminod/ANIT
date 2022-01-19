@@ -79,20 +79,17 @@ public class Algorithmer {
 
     public static List<State> AX(Graph graph, String prop) {
         List<State> result = new ArrayList<>();
-        boolean one;
-        boolean all;
+        boolean validState;
 
         for (State s : graph.getStates()) {
-            one = false;
-            all = true;
+            validState = true;
             for (State successors : s.getSuccessors()) {
-                if (successors.getFormulae().contains(prop)) {
-                    one = true;
-                } else {
-                    all = false;
+                if (!successors.getFormulae().contains(prop)) {
+                    validState = false;
+                    break;
                 }
             }
-            if (one && all) {
+            if (validState) {
                 result.add(s);
                 s.addFormulae(String.format("A X %s", prop));
             }
@@ -101,7 +98,7 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> EU(Graph graph, String prop1, String prop2) {
+    public static List<State> EUntil(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
         List<State> L = marking(graph, prop2);
         List<State> seenBefore = marking(graph, prop2);
@@ -127,12 +124,43 @@ public class Algorithmer {
 
     public static List<State> AU(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
+        List<State> listStateProp2 = marking(graph, prop2);
+
+        for (State state : graph.getStates()) {
+            state.setDegree(state.getSuccessors().size());
+        }
+
+        while (!listStateProp2.isEmpty()) {
+            State state = listStateProp2.get(0);
+            listStateProp2.remove(0);
+            result.add(state);
+            state.addFormulae(String.format("A %s U %s", prop1, prop2));
+            for (State predecessor : state.getPredecessors()) {
+                predecessor.setDegree(predecessor.getDegree() - 1);
+                if (predecessor.getDegree() == 0 && predecessor.getFormulae().contains(prop1) && !result.contains(predecessor)) {
+                    listStateProp2.add(predecessor);
+                }
+            }
+        }
 
         return result;
     }
 
     public static List<State> EF(Graph graph, String prop) {
         List<State> result = new ArrayList<>();
+        List<State> L = marking(graph, prop);
+
+        while (!L.isEmpty()) {
+            State state = L.get(0);
+            L.remove(0);
+            result.add(state);
+            state.addFormulae(String.format("E F %s", prop));
+            for (State predecessor : state.getPredecessors()) {
+                if (!L.contains(predecessor) && !result.contains(predecessor)) {
+                    L.add(predecessor);
+                }
+            }
+        }
 
         return result;
     }
