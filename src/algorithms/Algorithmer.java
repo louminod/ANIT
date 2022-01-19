@@ -101,9 +101,9 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> EU(Graph graph, String prop1, String prop2) {
+    public static List<State> EUntil(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
-        List<State> l = marking(graph, prop2);
+        List<State> L = marking(graph, prop2);
         List<State> seenBefore = marking(graph, prop2);
         State s;
 
@@ -116,7 +116,7 @@ public class Algorithmer {
                 if (!seenBefore.contains(predecessor)) {
                     seenBefore.add(predecessor);
                     if (predecessor.getFormulae().contains(prop1)) {
-                        l.add(predecessor);
+                        L.add(predecessor);
                     }
                 }
             }
