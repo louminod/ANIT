@@ -89,7 +89,7 @@ public class AlgorithmerTests {
     public void testEUntil(){
         Graph graph = new Graph("resources/k3.json");
 
-        List<State> result = Algorithmer.EU(graph, "a", "b");
+        List<State> result = Algorithmer.EUntil(graph, "a", "b");
         List<State> expected = new ArrayList<>();
         expected.add(graph.getStates().get(1));
         expected.add(graph.getStates().get(4));
