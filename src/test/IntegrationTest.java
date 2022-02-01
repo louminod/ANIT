@@ -16,8 +16,6 @@ public class IntegrationTest {
 
         List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(a/\\b))"));
 
-        System.out.println(parsedFormula);
-
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
 
@@ -35,8 +33,6 @@ public class IntegrationTest {
         Graph graph = new Graph("resources/k2.json");
 
         List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EX!a"));
-
-        System.out.println(parsedFormula);
 
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
@@ -91,8 +87,6 @@ public class IntegrationTest {
         Graph graph = new Graph("resources/k2.json");
 
         List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EaU(!b/\\c)"));
-
-        System.out.println(parsedFormula);
 
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
