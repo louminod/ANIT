@@ -18,7 +18,7 @@ public class Main {
         System.out.println("%(a\\/(b/\\c)) -> " + CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(b/\\c))")));
         */
 
-        String input = "EaUb";
+        String input = "EaUb/\\c";
         //List<Object> formula = CTLParser.parseStringFormula("%a\\/b");
         List<Object> formula = CTLParser.parseStringFormula(input);
 
@@ -27,7 +27,7 @@ public class Main {
             System.out.println(input + " -> " + parsedFormula);
 
             try {
-               // System.out.printf("RESULT -> %b", !Algorithmer.run(graph, parsedFormula).isEmpty());
+               System.out.printf("RESULT -> %b", !Algorithmer.run(graph, parsedFormula).isEmpty());
             } catch (Exception e) {
                 e.printStackTrace();
             }
