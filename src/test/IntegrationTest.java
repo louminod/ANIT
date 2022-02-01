@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IntegrationTest {
     @Test
-    public void testFormula1() {
+    public void testFormula1() throws Exception {
         Graph graph = new Graph("resources/k2.json");
 
         List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(a/\\b))"));
@@ -20,7 +20,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testFormula2() {
+    public void testFormula2() throws Exception {
         Graph graph = new Graph("resources/k2.json");
 
         List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%a\\/b"));
@@ -29,7 +29,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testFormula3() {
+    public void testFormula3() throws Exception {
         Graph graph = new Graph("resources/k2.json");
 
         List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EX!a"));

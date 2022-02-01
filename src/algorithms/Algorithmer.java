@@ -98,7 +98,7 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> EUntil(Graph graph, String prop1, String prop2) {
+    public static List<State> EU(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
         List<State> L = marking(graph, prop2);
         List<State> seenBefore = marking(graph, prop2);
@@ -177,13 +177,13 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> run(Graph graph, List<Object> formula) {
+    public static List<State> run(Graph graph, List<Object> formula) throws Exception {
         // System.out.println("formula to run : " + formula);
 
         Operator operator = (Operator) formula.get(0);
 
         Object first = null;
-        if (formula.get(1) instanceof ArrayList && ((ArrayList) formula.get(1)).size() > 1) {
+        if (formula.get(1) instanceof ArrayList && ((ArrayList<?>) formula.get(1)).size() > 1) {
             first = !run(graph, (List<Object>) formula.get(1)).isEmpty();
         } else {
             if (formula.get(1) instanceof ArrayList) {
@@ -195,13 +195,13 @@ public class Algorithmer {
 
         Object second = null;
         if (formula.size() == 3) {
-            if (formula.get(2) instanceof ArrayList && ((ArrayList) formula.get(2)).size() > 1) {
+            if (formula.get(2) instanceof ArrayList && ((ArrayList<?>) formula.get(2)).size() > 1) {
                 second = !run(graph, (List<Object>) formula.get(2)).isEmpty();
             } else {
                 if (formula.get(2) instanceof ArrayList) {
                     List<Object> sub = (List<Object>) formula.get(2);
                     if (sub.size() > 0) {
-                        second = ((ArrayList) formula.get(2)).get(0);
+                        second = ((ArrayList<?>) formula.get(2)).get(0);
                     }
                 } else {
                     second = (String) formula.get(2);
@@ -212,6 +212,8 @@ public class Algorithmer {
         // System.out.printf("operator -> %s | first -> %s | second -> %s\n", operator.getOperator(), first, second);
 
         List<State> result = new ArrayList<>();
+        Operator secondOperator;
+        String prop;
         switch (operator.getOperator()) {
             case "/\\":
                 if (first instanceof Boolean && second instanceof Boolean) {
@@ -257,6 +259,36 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.not(graph, (String) first);
                 }
+            case "E":
+                secondOperator = (Operator) ((ArrayList<?>) formula.get(1)).get(0);
+                prop = (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(1)).get(0);
+
+                switch (secondOperator.getOperator()) {
+                    case "X":
+                        result = Algorithmer.EX(graph, prop);
+                        break;
+                    case "F":
+                        result = Algorithmer.EF(graph, prop);
+                        break;
+                    default:
+                        throw new Exception("Unknown operator");
+                }
+                break;
+            case "A":
+                secondOperator = (Operator) ((ArrayList<?>) formula.get(1)).get(0);
+                prop = (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(1)).get(0);
+
+                switch (secondOperator.getOperator()) {
+                    case "X":
+                        result = Algorithmer.AX(graph, prop);
+                        break;
+                    case "F":
+                        result = Algorithmer.AF(graph, prop);
+                        break;
+                    default:
+                        throw new Exception("Unknown perator");
+                }
+                break;
         }
         return result;
     }
