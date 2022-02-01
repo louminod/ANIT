@@ -90,4 +90,15 @@ public class IntegrationTest {
 
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
+
+    @Test
+    public void testFormula10() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("AaU(%a\\/(EFc))"));
+
+        System.out.println(parsedFormula);
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
 }

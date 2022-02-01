@@ -48,6 +48,15 @@ public class CTLFormulaTests {
     }
 
     @Test
+    public void testFormula5() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("AaU(%a\\/(EFc))");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='A'}, [Operator{operator='U'}, [a], [Operator{operator='%'}, [Operator{operator='\\/'}, [a], [Operator{operator='E'}, [Operator{operator='F'}, [c]]]]]]]", result.toString());
+    }
+
+    @Test
     public void testFormulaValidityIsNotCorrect() {
         List<Object> parsedFormula = CTLParser.parseStringFormula("%(a\\/b");
 

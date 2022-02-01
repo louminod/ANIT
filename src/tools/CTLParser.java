@@ -139,7 +139,12 @@ public abstract class CTLParser {
                             sub.add(parseCTLFormula(formula.subList(0, i)));
                             stack.addAll(sub);
                         } else {
-                            stack.add(parseCTLFormula(formula.subList(0, i)));
+                            List<Object> sub = parseCTLFormula(formula.subList(0, i));
+                            if (sub.size() == 1) {
+                                stack.addAll(sub);
+                            } else {
+                                stack.add(sub);
+                            }
                         }
 
                         if (second.size() == 1) {
@@ -147,7 +152,12 @@ public abstract class CTLParser {
                             sub.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
                             stack.addAll(sub);
                         } else {
-                            stack.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
+                            List<Object> sub = parseCTLFormula(formula.subList(i + 1, formula.size()));
+                            if (sub.size() == 1) {
+                                stack.addAll(sub);
+                            } else {
+                                stack.add(sub);
+                            }
                         }
                     } else {
                         stack.add(element);
