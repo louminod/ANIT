@@ -231,6 +231,7 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.and(graph, (String) first, (String) second);
                 }
+                break;
             case "\\/":
                 if (first instanceof Boolean && second instanceof Boolean) {
                     if ((Boolean) first || (Boolean) second) {
@@ -247,6 +248,7 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.or(graph, (String) first, (String) second);
                 }
+                break;
             case "%":
                 if (first instanceof Boolean) {
                     if (!(Boolean) first) {
@@ -259,6 +261,7 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.not(graph, (String) first);
                 }
+                break;
             case "E":
                 secondOperator = (Operator) ((ArrayList<?>) formula.get(1)).get(0);
                 prop = (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(1)).get(0);
@@ -270,8 +273,11 @@ public class Algorithmer {
                     case "F":
                         result = Algorithmer.EF(graph, prop);
                         break;
+                    case "U":
+                        result = Algorithmer.EU(graph, (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(1)).get(0), (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(2)).get(0));
+                        break;
                     default:
-                        throw new Exception("Unknown operator");
+                        throw new Exception("Unknown operator : " + secondOperator);
                 }
                 break;
             case "A":
@@ -284,6 +290,9 @@ public class Algorithmer {
                         break;
                     case "F":
                         result = Algorithmer.AF(graph, prop);
+                        break;
+                    case "U":
+                        result = Algorithmer.EU(graph, (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(1)).get(0), (String) ((ArrayList<?>) ((ArrayList<?>) formula.get(1)).get(2)).get(0));
                         break;
                     default:
                         throw new Exception("Unknown perator");

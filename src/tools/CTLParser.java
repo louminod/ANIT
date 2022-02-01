@@ -105,26 +105,28 @@ public abstract class CTLParser {
                     stack.add(element);
                     stack.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
                 } else {
-                    int operatorIndex = i;
-                    boolean stop = false;
-                    do {
-                        i++;
-                        if (i < formula.size()) {
-                            element = formula.get(i);
-                            if (element instanceof String && element.equals("(")) {
+                    if (formula.get(i + 1) instanceof Operator) {
+                        int operatorIndex = i;
+                        boolean stop = false;
+                        do {
+                            i++;
+                            if (i < formula.size()) {
+                                element = formula.get(i);
+                                if (element instanceof String || element.equals("(")) {
+                                    stop = true;
+                                } else if (element instanceof Operator) {
+                                    operatorIndex = i;
+                                }
+                            } else {
                                 stop = true;
-                            } else if (element instanceof Operator) {
-                                operatorIndex = i;
                             }
-                        } else {
-                            stop = true;
-                        }
-                    } while (!stop);
+                        } while (!stop);
 
-                    i = operatorIndex;
-                    element = formula.get(i);
+                        i = operatorIndex;
+                        element = formula.get(i);
+                    }
 
-                    if ("/\\".equals(((Operator) element).getOperator()) || "\\/".equals(((Operator) element).getOperator())) {
+                    if ("/\\".equals(((Operator) element).getOperator()) || "\\/".equals(((Operator) element).getOperator()) || "U".equals(((Operator) element).getOperator())) {
                         if (!stack.isEmpty()) {
                             stack.remove(0);
                         }
