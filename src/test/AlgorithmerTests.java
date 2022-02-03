@@ -10,6 +10,7 @@ import java.util.List;
 
 public class AlgorithmerTests {
 
+
     @Test
     public void testMarkingA() {
         Graph graph = new Graph("resources/k1.json");
@@ -155,6 +156,7 @@ public class AlgorithmerTests {
         Graph graph = new Graph("resources/k4.json");
 
         List<State> result = Algorithmer.AG(graph, "a");
+        System.out.println(result);
         List<State> expected = new ArrayList<>();
         expected.add(graph.getStates().get(1));
         expected.add(graph.getStates().get(3));
@@ -168,7 +170,7 @@ public class AlgorithmerTests {
 
     @Test
     public void testEG() {
-        Graph graph = new Graph("ressources/k4.json");
+        Graph graph = new Graph("resources/k4.json");
 
         List<State> result = Algorithmer.EG(graph, "a");
         List<State> expected = new ArrayList<>();
@@ -186,7 +188,7 @@ public class AlgorithmerTests {
 
     @Test
     public void testAF() {
-        Graph graph = new Graph("ressources/k4.json");
+        Graph graph = new Graph("resources/k4.json");
 
         List<State> result = Algorithmer.AF(graph, "a");
         List<State> expected = new ArrayList<>();
