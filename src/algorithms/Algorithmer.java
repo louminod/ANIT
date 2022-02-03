@@ -166,7 +166,17 @@ public class Algorithmer {
     }
 
     public static List<State> AF(Graph graph, String prop) {
-        List<State> result = new ArrayList<>();
+        not(graph, prop);
+        EG(graph, "not " + prop);
+        List<State> result = not(graph, "E G not " + prop);
+
+        for (State r: result) {
+            for (State s: graph.getStates()) {
+                if (s.equals(r)) {
+                    graph.addFormulae(s, String.format("A F %s", prop));
+                }
+            }
+        }
 
         return result;
     }
@@ -188,7 +198,42 @@ public class Algorithmer {
 
     public static List<State> EG(Graph graph, String prop) {
         List<State> result = new ArrayList<>();
+        List<State> seenBefore;
+        List<State> L;
+        State s;
+        boolean ok = true;
+        for (State state: graph.getStates()) {
+            if (state.getFormulae().contains(prop)) {
+                L = state.getSuccessors();
+                if (L.isEmpty() && !result.contains(state)) {
+                    result.add(state);
+                    graph.addFormulae(state, String.format("E G %s", prop));
+                }
+                seenBefore = new ArrayList<>();
+                while (!L.isEmpty()) {
+                    s = L.get(0);
+                    L.remove(0);
+                    ok = true;
+                    if (s.getFormulae().contains(prop)) {
+                        seenBefore.add(s);
+                        for (State successor: s.getSuccessors()) {
+                            ok = false;
+                            if (!seenBefore.contains(successor)) {
+                                L.add(successor);
+                            } else { ok = true; }
+                        }
+                        if (ok) {
+                            if (!result.contains(state)) {
+                                result.add(state);
+                                graph.addFormulae(state, String.format("E G %s", prop));
+                            }
 
+                        }
+                    }
+                }
+            }
+
+        }
         return result;
     }
 
