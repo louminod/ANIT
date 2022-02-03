@@ -26,7 +26,7 @@ public class Algorithmer {
 
         for (State s : graph.getStates()) {
             if (!s.getFormulae().contains(prop)) {
-                s.addFormulae(String.format("not %s", prop));
+                graph.addFormulae(s, String.format("not %s", prop));
                 result.add(s);
             }
         }
@@ -39,7 +39,7 @@ public class Algorithmer {
 
         for (State s : graph.getStates()) {
             if (s.getFormulae().contains(prop1) && s.getFormulae().contains(prop2)) {
-                s.addFormulae(String.format("%s and %s", prop1, prop2));
+                graph.addFormulae(s, String.format("%s and %s", prop1, prop2));
                 result.add(s);
             }
         }
@@ -52,7 +52,7 @@ public class Algorithmer {
 
         for (State s : graph.getStates()) {
             if (s.getFormulae().contains(prop1) || s.getFormulae().contains(prop2)) {
-                s.addFormulae(String.format("%s or %s", prop1, prop2));
+                graph.addFormulae(s, String.format("%s or %s", prop1, prop2));
                 result.add(s);
             }
         }
@@ -67,7 +67,7 @@ public class Algorithmer {
             done = false;
             for (State successors : s.getSuccessors()) {
                 if (successors.getFormulae().contains(prop) && !done) {
-                    s.addFormulae(String.format("E X %s", prop));
+                    graph.addFormulae(s, String.format("E X %s", prop));
                     result.add(s);
                     done = true;
                 }
@@ -91,7 +91,7 @@ public class Algorithmer {
             }
             if (validState) {
                 result.add(s);
-                s.addFormulae(String.format("A X %s", prop));
+                graph.addFormulae(s, String.format("A X %s", prop));
             }
         }
 
@@ -107,7 +107,7 @@ public class Algorithmer {
         while (!L.isEmpty()) {
             s = L.get(0);
             L.remove(0);
-            s.addFormulae(String.format("E %s U %s", prop1, prop2));
+            graph.addFormulae(s, String.format("E %s U %s", prop1, prop2));
             result.add(s);
             for (State predecessor : s.getPredecessors()) {
                 if (!seenBefore.contains(predecessor)) {
@@ -134,7 +134,7 @@ public class Algorithmer {
             State state = listStateProp2.get(0);
             listStateProp2.remove(0);
             result.add(state);
-            state.addFormulae(String.format("A %s U %s", prop1, prop2));
+            graph.addFormulae(state, String.format("A %s U %s", prop1, prop2));
             for (State predecessor : state.getPredecessors()) {
                 predecessor.setDegree(predecessor.getDegree() - 1);
                 if (predecessor.getDegree() == 0 && predecessor.getFormulae().contains(prop1) && !result.contains(predecessor)) {
@@ -154,7 +154,7 @@ public class Algorithmer {
             State state = L.get(0);
             L.remove(0);
             result.add(state);
-            state.addFormulae(String.format("E F %s", prop));
+            graph.addFormulae(state, String.format("E F %s", prop));
             for (State predecessor : state.getPredecessors()) {
                 if (!L.contains(predecessor) && !result.contains(predecessor)) {
                     L.add(predecessor);
@@ -166,14 +166,74 @@ public class Algorithmer {
     }
 
     public static List<State> AF(Graph graph, String prop) {
-        List<State> result = new ArrayList<>();
+        not(graph, prop);
+        EG(graph, "not " + prop);
+        List<State> result = not(graph, "E G not " + prop);
+
+        for (State r: result) {
+            for (State s: graph.getStates()) {
+                if (s.equals(r)) {
+                    graph.addFormulae(s, String.format("A F %s", prop));
+                }
+            }
+        }
 
         return result;
     }
 
-    public static List<State> G(Graph graph, String prop) {
-        List<State> result = new ArrayList<>();
+    public static List<State> AG(Graph graph, String prop) {
+        not(graph, prop);
+        EF(graph, "not " + prop);
+        List<State> result = not(graph, "E F not " + prop);
 
+        for (State r: result) {
+            for (State s: graph.getStates()) {
+                if (s.equals(r)) {
+                    graph.addFormulae(s, String.format("A G %s", prop));
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<State> EG(Graph graph, String prop) {
+        List<State> result = new ArrayList<>();
+        List<State> seenBefore;
+        List<State> L;
+        State s;
+        boolean ok = true;
+        for (State state: graph.getStates()) {
+            if (state.getFormulae().contains(prop)) {
+                L = state.getSuccessors();
+                if (L.isEmpty() && !result.contains(state)) {
+                    result.add(state);
+                    graph.addFormulae(state, String.format("E G %s", prop));
+                }
+                seenBefore = new ArrayList<>();
+                while (!L.isEmpty()) {
+                    s = L.get(0);
+                    L.remove(0);
+                    ok = true;
+                    if (s.getFormulae().contains(prop)) {
+                        seenBefore.add(s);
+                        for (State successor: s.getSuccessors()) {
+                            ok = false;
+                            if (!seenBefore.contains(successor)) {
+                                L.add(successor);
+                            } else { ok = true; }
+                        }
+                        if (ok) {
+                            if (!result.contains(state)) {
+                                result.add(state);
+                                graph.addFormulae(state, String.format("E G %s", prop));
+                            }
+
+                        }
+                    }
+                }
+            }
+
+        }
         return result;
     }
 

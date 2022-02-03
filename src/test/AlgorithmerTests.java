@@ -10,6 +10,7 @@ import java.util.List;
 
 public class AlgorithmerTests {
 
+
     @Test
     public void testMarkingA() {
         Graph graph = new Graph("resources/k1.json");
@@ -80,6 +81,7 @@ public class AlgorithmerTests {
         expected.add(graph.getStates().get(5));
         expected.add(graph.getStates().get(6));
         expected.add(graph.getStates().get(7));
+        expected.add(graph.getStates().get(8));
 
         assert (result.containsAll(expected));
         assert (result.size() == expected.size());
@@ -148,5 +150,73 @@ public class AlgorithmerTests {
         assert (result.containsAll(expected));
         assert (result.size() == expected.size());
 
+    }
+
+    @Test
+    public void testAG(){
+        Graph graph = new Graph("resources/k4.json");
+
+        List<State> result = Algorithmer.AG(graph, "a");
+        List<State> expected = new ArrayList<>();
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+        expected.add(graph.getStates().get(6));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
+    }
+
+    @Test
+    public void testEG() {
+        Graph graph = new Graph("resources/k4.json");
+
+        List<State> result = Algorithmer.EG(graph, "a");
+        List<State> expected = new ArrayList<>();
+
+        expected.add(graph.getStates().get(0));
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+        expected.add(graph.getStates().get(6));
+
+        assert (result.containsAll(expected));
+        assert  (result.size() == expected.size());
+    }
+
+    @Test
+    public void testAF() {
+        Graph graph = new Graph("resources/k4.json");
+
+        List<State> result = Algorithmer.AF(graph, "a");
+        List<State> expected = new ArrayList<>();
+
+        expected.add(graph.getStates().get(0));
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(2));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+        expected.add(graph.getStates().get(6));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
+    }
+
+    @Test
+    public void testEG2() {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<State> result = Algorithmer.EG(graph, "a");
+        List<State> expected = new ArrayList<>();
+
+        expected.add(graph.getStates().get(6));
+        expected.add(graph.getStates().get(7));
+        expected.add(graph.getStates().get(8));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
     }
 }
