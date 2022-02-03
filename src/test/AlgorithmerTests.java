@@ -183,4 +183,23 @@ public class AlgorithmerTests {
         assert (result.containsAll(expected));
         assert  (result.size() == expected.size());
     }
+
+    @Test
+    public void testAF() {
+        Graph graph = new Graph("ressources/k4.json");
+
+        List<State> result = Algorithmer.AF(graph, "a");
+        List<State> expected = new ArrayList<>();
+
+        expected.add(graph.getStates().get(0));
+        expected.add(graph.getStates().get(1));
+        expected.add(graph.getStates().get(2));
+        expected.add(graph.getStates().get(3));
+        expected.add(graph.getStates().get(4));
+        expected.add(graph.getStates().get(5));
+        expected.add(graph.getStates().get(6));
+
+        assert (result.containsAll(expected));
+        assert (result.size() == expected.size());
+    }
 }
