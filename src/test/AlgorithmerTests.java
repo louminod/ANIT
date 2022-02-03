@@ -149,4 +149,12 @@ public class AlgorithmerTests {
         assert (result.size() == expected.size());
 
     }
+
+    @Test
+    public void testAG(){
+        Graph graph = new Graph("resources/k4.json");
+
+        List<State> result = Algorithmer.EF(graph, "not b");
+        List<State> expected = new ArrayList<>();
+    }
 }

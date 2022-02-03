@@ -1,0 +1,40 @@
+{
+  "initial": "S0",
+  "states":[
+    {
+      "name":"S0",
+      "propositions":["a","b"],
+      "successors":["S1", "S2"]
+    },
+    {
+      "name":"S1",
+      "propositions":["a", "b"],
+      "successors":["S3", "S4"]
+    },
+    {
+      "name":"S2",
+      "propositions":["!a", "b"],
+      "successors":["S5", "S6"]
+    },
+    {
+      "name":"S3",
+      "propositions":["a", "!b"],
+      "successors":[]
+    },
+    {
+      "name":"S4",
+      "propositions":["a", "b"],
+      "successors":[]
+    },
+    {
+      "name":"S5",
+      "propositions":["a", "b"],
+      "successors":[]
+    },
+    {
+      "name":"S6",
+      "propositions":["a", "!b"],
+      "successors":[]
+    }
+  ]
+}

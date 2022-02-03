@@ -171,7 +171,13 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> G(Graph graph, String prop) {
+    public static List<State> AG(Graph graph, String prop) {
+        List<State> result = new ArrayList<>();
+
+        return result;
+    }
+
+    public static List<State> EG(Graph graph, String prop) {
         List<State> result = new ArrayList<>();
 
         return result;
