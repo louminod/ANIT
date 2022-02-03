@@ -98,7 +98,7 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> EUntil(Graph graph, String prop1, String prop2) {
+    public static List<State> EU(Graph graph, String prop1, String prop2) {
         List<State> result = new ArrayList<>();
         List<State> L = marking(graph, prop2);
         List<State> seenBefore = marking(graph, prop2);
@@ -109,7 +109,7 @@ public class Algorithmer {
             L.remove(0);
             s.addFormulae(String.format("E %s U %s", prop1, prop2));
             result.add(s);
-            for (State predecessor: s.getPredecessors()) {
+            for (State predecessor : s.getPredecessors()) {
                 if (!seenBefore.contains(predecessor)) {
                     seenBefore.add(predecessor);
                     if (predecessor.getFormulae().contains(prop1)) {
@@ -183,41 +183,143 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> run(Graph graph, List<Object> formula) {
-        System.out.println("formula : " + formula);
+    public static List<State> run(Graph graph, List<Object> formula) throws Exception {
+        //System.out.println("formula to run : " + formula);
+        List<State> result = new ArrayList<>();
 
         Operator operator = (Operator) formula.get(0);
 
-        Object first = null;
-        if (formula.get(1) instanceof ArrayList && ((ArrayList) formula.get(1)).size() > 1) {
-            first = !run(graph, (List<Object>) formula.get(1)).isEmpty();
-        } else {
-            if (formula.get(1) instanceof ArrayList) {
-                first = ((ArrayList) formula.get(1)).get(0);
-            } else {
-                first = (String) formula.get(1);
+        if (formula.size() == 2) {
+            formula = (List<Object>) formula.get(1);
+
+            Operator nextOperator = (Operator) formula.get(0);
+
+            Object first;
+            Object second;
+            switch (operator.getOperator()) {
+                case "%":
+                    first = getElement(graph, formula.get(1));
+                    if (first instanceof Boolean) {
+                        if (!(Boolean) first) {
+                            result.add(new State("result"));
+                        }
+                    } else if (first instanceof String) {
+                        result = Algorithmer.not(graph, (String) first);
+                    } else {
+                        throw new Exception("first type not handled : " + first.getClass());
+                    }
+                    break;
+                case "E":
+                    switch (nextOperator.getOperator()) {
+                        case "X":
+                            first = getElement(graph, formula.get(1));
+                            if (first instanceof Boolean) {
+                                result.add(new State("exist"));
+                            } else if (first instanceof String) {
+                                result = Algorithmer.EX(graph, (String) first);
+                            } else {
+                                throw new Exception("first type not handled : " + first.getClass());
+                            }
+                            break;
+                        case "F":
+                            first = getElement(graph, formula.get(1));
+                            if (first instanceof Boolean) {
+                                result.add(new State("exist"));
+                            } else if (first instanceof String) {
+                                result = Algorithmer.EF(graph, (String) first);
+                            } else {
+                                throw new Exception("first type not handled : " + first.getClass());
+                            }
+                            break;
+                        case "U":
+                            first = getElement(graph, formula.get(1));
+                            second = getElement(graph, formula.get(2));
+                            if (first instanceof Boolean && second instanceof Boolean) {
+                                if ((Boolean) first && (Boolean) second) {
+                                    result.add(new State("result"));
+                                }
+                            } else if (first instanceof Boolean) {
+                                if ((Boolean) first && !Algorithmer.marking(graph, (String) second).isEmpty()) {
+                                    result.add(new State("result"));
+                                }
+                            } else if (second instanceof Boolean) {
+                                if (!Algorithmer.marking(graph, (String) first).isEmpty() && (Boolean) second) {
+                                    result.add(new State("result"));
+                                }
+                            } else if (first instanceof String && second instanceof String) {
+                                result = Algorithmer.EU(graph, (String) first, (String) second);
+                            } else {
+                                if (!(first instanceof String)) {
+                                    throw new Exception("first type not handled : " + first.getClass());
+                                } else if (!(second instanceof String)) {
+                                    throw new Exception("second type not handled : " + second.getClass());
+                                }
+                            }
+                            break;
+                        default:
+                            throw new Exception("Operator not handled : " + operator.getOperator());
+                    }
+                    break;
+                case "A":
+                    switch (nextOperator.getOperator()) {
+                        case "X":
+                            first = getElement(graph, formula.get(1));
+                            if (first instanceof Boolean) {
+                                result.add(new State("exist"));
+                            } else if (first instanceof String) {
+                                result = Algorithmer.AX(graph, (String) first);
+                            } else {
+                                throw new Exception("first type not handled : " + first.getClass());
+                            }
+                            break;
+                        case "F":
+                            first = getElement(graph, formula.get(1));
+                            if (first instanceof Boolean) {
+                                result.add(new State("exist"));
+                            } else if (first instanceof String) {
+                                result = Algorithmer.AF(graph, (String) first);
+                            } else {
+                                throw new Exception("first type not handled : " + first.getClass());
+                            }
+                            break;
+                        case "U":
+                            first = getElement(graph, formula.get(1));
+                            second = getElement(graph, formula.get(2));
+                            if (first instanceof Boolean && second instanceof Boolean) {
+                                if ((Boolean) first && (Boolean) second) {
+                                    result.add(new State("result"));
+                                }
+                            } else if (first instanceof Boolean) {
+                                if ((Boolean) first && !Algorithmer.marking(graph, (String) second).isEmpty()) {
+                                    result.add(new State("result"));
+                                }
+                            } else if (second instanceof Boolean) {
+                                if (!Algorithmer.marking(graph, (String) first).isEmpty() && (Boolean) second) {
+                                    result.add(new State("result"));
+                                }
+                            } else if (first instanceof String && second instanceof String) {
+                                result = Algorithmer.AU(graph, (String) first, (String) second);
+                            } else {
+                                if (!(first instanceof String)) {
+                                    throw new Exception("first type not handled : " + first.getClass());
+                                } else if (!(second instanceof String)) {
+                                    throw new Exception("second type not handled : " + second.getClass());
+                                }
+                            }
+                            break;
+                        default:
+                            throw new Exception("Operator not handled : " + operator.getOperator());
+                    }
+                    break;
+                default:
+                    throw new Exception("Operator not handled : " + operator.getOperator());
             }
 
-        }
+        } else if (formula.size() == 3) {
+            Object first = getElement(graph, formula.get(1));
+            Object second = getElement(graph, formula.get(2));
 
-        Object second = null;
-        if (formula.size() == 3) {
-            if (formula.get(2) instanceof ArrayList && ((ArrayList) formula.get(2)).size() > 1) {
-                second = !run(graph, (List<Object>) formula.get(2)).isEmpty();
-            } else {
-                if (formula.get(2) instanceof ArrayList) {
-                    second = ((ArrayList) formula.get(2)).get(0);
-                } else {
-                    second = (String) formula.get(2);
-                }
-            }
-        }
-
-        System.out.printf("operator -> %s | first -> %s | second -> %s\n", operator.getOperator(), first, second);
-
-        List<State> result = new ArrayList<>();
-        switch (operator.getOperator()) {
-            case "/\\":
+            if (operator.getOperator().equals("/\\")) {
                 if (first instanceof Boolean && second instanceof Boolean) {
                     if ((Boolean) first && (Boolean) second) {
                         result.add(new State("result"));
@@ -233,7 +335,7 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.and(graph, (String) first, (String) second);
                 }
-            case "\\/":
+            } else if (operator.getOperator().equals("\\/")) {
                 if (first instanceof Boolean && second instanceof Boolean) {
                     if ((Boolean) first || (Boolean) second) {
                         result.add(new State("result"));
@@ -249,15 +351,25 @@ public class Algorithmer {
                 } else {
                     result = Algorithmer.or(graph, (String) first, (String) second);
                 }
-            case "%":
-                if (first instanceof Boolean) {
-                    if (!(Boolean) first) {
-                        result.add(new State("result"));
-                    }
-                } else {
-                    result = Algorithmer.not(graph, (String) first);
-                }
+            } else {
+                throw new Exception("Operator not handled : " + operator.getOperator());
+            }
+
+        } else {
+            throw new Exception("Formula size seems incorrect : " + formula.size());
         }
+
         return result;
+    }
+
+    private static Object getElement(Graph graph, Object element) throws Exception {
+        if (element instanceof ArrayList) {
+            if (((ArrayList<?>) element).size() == 1) {
+                return ((ArrayList<?>) element).get(0);
+            } else {
+                return !run(graph, (List<Object>) element).isEmpty();
+            }
+        }
+        return null;
     }
 }

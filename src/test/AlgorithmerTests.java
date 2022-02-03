@@ -86,10 +86,10 @@ public class AlgorithmerTests {
     }
 
     @Test
-    public void testEUntil(){
+    public void testEUntil() {
         Graph graph = new Graph("resources/k3.json");
 
-        List<State> result = Algorithmer.EUntil(graph, "a", "b");
+        List<State> result = Algorithmer.EU(graph, "a", "b");
         List<State> expected = new ArrayList<>();
         expected.add(graph.getStates().get(1));
         expected.add(graph.getStates().get(4));
@@ -103,7 +103,7 @@ public class AlgorithmerTests {
 
 
     @Test
-    public void testAUntil(){
+    public void testAUntil() {
         Graph graph = new Graph("resources/k3.json");
 
         List<State> result = Algorithmer.AU(graph, "a", "b");
@@ -116,7 +116,7 @@ public class AlgorithmerTests {
     }
 
     @Test
-    public void testNot(){
+    public void testNot() {
         Graph graph = new Graph("resources/k2.json");
         List<State> result = Algorithmer.not(graph, "a");
         List<State> expected = new ArrayList<>();
@@ -131,7 +131,7 @@ public class AlgorithmerTests {
     }
 
     @Test
-    public void testEF(){
+    public void testEF() {
         Graph graph = new Graph("resources/k2.json");
         Algorithmer.not(graph, "b");
 

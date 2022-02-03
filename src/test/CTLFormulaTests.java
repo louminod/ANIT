@@ -17,16 +17,7 @@ public class CTLFormulaTests {
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
-        System.out.println(result);
-
-        assertEquals(Operator.class, result.get(0).getClass());
-        assertEquals(ArrayList.class, result.get(1).getClass());
-        assertEquals(Operator.class, ((ArrayList<Object>) result.get(1)).get(0).getClass());
-        assertEquals("Q3", ((ArrayList<Object>) result.get(1)).get(1));
-        assertEquals(ArrayList.class, ((ArrayList<Object>) result.get(1)).get(2).getClass());
-        assertEquals(Operator.class, ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(0).getClass());
-        assertEquals("Q1", ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(1));
-        assertEquals("Q2", ((ArrayList) ((ArrayList<Object>) result.get(1)).get(2)).get(2));
+        assertEquals("[Operator{operator='%'}, [Operator{operator='\\/'}, [Q3], [Operator{operator='/\\'}, [Q1], [Q2]]]]", result.toString());
     }
 
     @Test
@@ -35,9 +26,7 @@ public class CTLFormulaTests {
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
-        assertEquals(Operator.class, result.get(0).getClass());
-        assertEquals("a", result.get(1));
-        assertEquals("b", result.get(2));
+        assertEquals("[Operator{operator='/\\'}, [a], [b]]", result.toString());
     }
 
     @Test
@@ -46,9 +35,25 @@ public class CTLFormulaTests {
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
-        assertEquals(Operator.class, result.get(0).getClass());
-        assertEquals(Operator.class, result.get(1).getClass());
-        assertEquals("a", result.get(2));
+        assertEquals("[Operator{operator='E'}, [Operator{operator='X'}, [a]]]", result.toString());
+    }
+
+    @Test
+    public void testFormula4() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("EaUb");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='E'}, [Operator{operator='U'}, [a], [b]]]", result.toString());
+    }
+
+    @Test
+    public void testFormula5() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("AaU(%a\\/(EFc))");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='A'}, [Operator{operator='U'}, [a], [Operator{operator='%'}, [Operator{operator='\\/'}, [a], [Operator{operator='E'}, [Operator{operator='F'}, [c]]]]]]]", result.toString());
     }
 
     @Test

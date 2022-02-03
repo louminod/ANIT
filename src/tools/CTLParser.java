@@ -70,7 +70,6 @@ public abstract class CTLParser {
         // System.out.printf("Evaluating %s\n", formula);
 
         List<Object> stack = new ArrayList<>();
-
         for (int i = 0; i < formula.size(); i++) {
             Object element = formula.get(i);
 
@@ -86,7 +85,12 @@ public abstract class CTLParser {
                         counter++;
                     } else if (")".equals(element)) {
                         if (counter == 0) {
-                            stack.add(parseCTLFormula(subFormula));
+                            if (subFormula.size() == 3) {
+                                stack.addAll(parseCTLFormula(subFormula));
+                            } else {
+                                stack.add(parseCTLFormula(subFormula));
+                            }
+
                             return stack;
                         } else {
                             subFormula.add(element);
@@ -97,42 +101,74 @@ public abstract class CTLParser {
                     }
                 }
             } else if (element instanceof Operator) {
+                if (formula.get(i + 1) instanceof Operator) {
+                    stack.add(element);
+                    stack.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
+                } else {
+                    if (formula.get(i + 1) instanceof Operator) {
+                        int operatorIndex = i;
+                        boolean stop = false;
+                        do {
+                            i++;
+                            if (i < formula.size()) {
+                                element = formula.get(i);
+                                if (element instanceof String || element.equals("(")) {
+                                    stop = true;
+                                } else if (element instanceof Operator) {
+                                    operatorIndex = i;
+                                }
+                            } else {
+                                stop = true;
+                            }
+                        } while (!stop);
 
-                int operatorIndex = i;
-                boolean stop = false;
-                do {
-                    i++;
-                    if (i < formula.size()) {
+                        i = operatorIndex;
                         element = formula.get(i);
-                        if (element instanceof String && element.equals("(")) {
-                            stop = true;
-                        } else if (element instanceof Operator) {
-                            operatorIndex = i;
+                    }
+
+                    if ("/\\".equals(((Operator) element).getOperator()) || "\\/".equals(((Operator) element).getOperator()) || "U".equals(((Operator) element).getOperator())) {
+                        if (!stack.isEmpty()) {
+                            stack.remove(0);
+                        }
+                        stack.add(element);
+                        List<Object> first = formula.subList(0, i);
+                        List<Object> second = formula.subList(i + 1, formula.size());
+
+                        if (first.size() == 1) {
+                            List<Object> sub = new ArrayList<>();
+                            sub.add(parseCTLFormula(formula.subList(0, i)));
+                            stack.addAll(sub);
+                        } else {
+                            List<Object> sub = parseCTLFormula(formula.subList(0, i));
+                            if (sub.size() == 1) {
+                                stack.addAll(sub);
+                            } else {
+                                stack.add(sub);
+                            }
+                        }
+
+                        if (second.size() == 1) {
+                            List<Object> sub = new ArrayList<>();
+                            sub.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
+                            stack.addAll(sub);
+                        } else {
+                            List<Object> sub = parseCTLFormula(formula.subList(i + 1, formula.size()));
+                            if (sub.size() == 1) {
+                                stack.addAll(sub);
+                            } else {
+                                stack.add(sub);
+                            }
                         }
                     } else {
-                        stop = true;
+                        stack.add(element);
+                        List<Object> sub = parseCTLFormula(formula.subList(i + 1, formula.size()));
+                        if (sub.get(0) instanceof ArrayList) {
+                            stack.addAll(sub);
+                        } else {
+                            stack.add(sub);
+                        }
                     }
-                } while (!stop);
-
-                i = operatorIndex;
-                element = formula.get(i);
-
-                if ("/\\".equals(((Operator) element).getOperator()) || "\\/".equals(((Operator) element).getOperator())) {
-                    if (!stack.isEmpty()) {
-                        stack.remove(0);
-                    }
-                    stack.add(element);
-                    List<Object> sub1 = new ArrayList<>();
-                    List<Object> sub2 = new ArrayList<>();
-                    sub1.add(parseCTLFormula(formula.subList(0, i)));
-                    stack.addAll(sub1);
-                    sub2.add(parseCTLFormula(formula.subList(i + 1, formula.size())));
-                    stack.addAll(sub2);
-                } else {
-                    stack.add(element);
-                    stack.addAll(parseCTLFormula(formula.subList(i + 1, formula.size())));
                 }
-
                 return stack;
             } else if (element instanceof String) {
                 stack.add(element);

@@ -11,24 +11,94 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IntegrationTest {
     @Test
-    public void testFormula1() {
+    public void testFormula1() throws Exception {
         Graph graph = new Graph("resources/k2.json");
 
-        List<Object> formula = CTLParser.parseStringFormula("%(a\\/(a/\\b))");
-        assertTrue(CTLParser.checkFormulaValidity(formula));
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(a/\\b))"));
 
-        List<Object> parsedFormula = CTLParser.parseCTLFormula(formula);
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
 
     @Test
-    public void testFormula2() {
+    public void testFormula2() throws Exception {
         Graph graph = new Graph("resources/k2.json");
 
-        List<Object> formula = CTLParser.parseStringFormula("%a\\/b");
-        assertTrue(CTLParser.checkFormulaValidity(formula));
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%a\\/b"));
 
-        List<Object> parsedFormula = CTLParser.parseCTLFormula(formula);
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula3() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EX!a"));
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula4() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EF!a"));
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula5() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("AX!a"));
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula6() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("AF!a"));
+
+        assertTrue(Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula7() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EaUb"));
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula8() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("AaUb"));
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula9() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EaU(!b/\\c)"));
+
+        assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
+    }
+
+    @Test
+    public void testFormula10() throws Exception {
+        Graph graph = new Graph("resources/k2.json");
+
+        List<Object> parsedFormula = CTLParser.parseCTLFormula(CTLParser.parseStringFormula("AaU(%a\\/(EFc))"));
+
+        System.out.println(parsedFormula);
+
         assertTrue(!Algorithmer.run(graph, parsedFormula).isEmpty());
     }
 }
