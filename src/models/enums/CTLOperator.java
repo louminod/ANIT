@@ -1,7 +1,7 @@
 package models.enums;
 
 public abstract class CTLOperator {
-    public static final String[] OPERATORS = {"E", "F", "X", "/\\", "\\/", "A", "G", "%", "U"};
+    public static final String[] OPERATORS = {"EX", "EF", "EU", "EG", "AX", "AF", "AU", "AG", "/\\", "\\/", "%"};
 
     public static boolean isOperator(String element) {
         for (String operator : OPERATORS) {

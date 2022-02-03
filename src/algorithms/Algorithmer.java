@@ -26,7 +26,7 @@ public class Algorithmer {
 
         for (State s : graph.getStates()) {
             if (!s.getFormulae().contains(prop)) {
-                graph.addFormulae(s, String.format("not %s", prop));
+                graph.addFormulae(s, String.format("%% %s", prop));
                 result.add(s);
             }
         }
@@ -39,7 +39,7 @@ public class Algorithmer {
 
         for (State s : graph.getStates()) {
             if (s.getFormulae().contains(prop1) && s.getFormulae().contains(prop2)) {
-                graph.addFormulae(s, String.format("%s and %s", prop1, prop2));
+                graph.addFormulae(s, String.format("%s /\\ %s", prop1, prop2));
                 result.add(s);
             }
         }
@@ -52,7 +52,7 @@ public class Algorithmer {
 
         for (State s : graph.getStates()) {
             if (s.getFormulae().contains(prop1) || s.getFormulae().contains(prop2)) {
-                graph.addFormulae(s, String.format("%s or %s", prop1, prop2));
+                graph.addFormulae(s, String.format("%s \\/ %s", prop1, prop2));
                 result.add(s);
             }
         }
@@ -67,7 +67,7 @@ public class Algorithmer {
             done = false;
             for (State successors : s.getSuccessors()) {
                 if (successors.getFormulae().contains(prop) && !done) {
-                    graph.addFormulae(s, String.format("E X %s", prop));
+                    graph.addFormulae(s, String.format("EX %s", prop));
                     result.add(s);
                     done = true;
                 }
@@ -91,7 +91,7 @@ public class Algorithmer {
             }
             if (validState) {
                 result.add(s);
-                graph.addFormulae(s, String.format("A X %s", prop));
+                graph.addFormulae(s, String.format("AX %s", prop));
             }
         }
 
@@ -107,7 +107,7 @@ public class Algorithmer {
         while (!L.isEmpty()) {
             s = L.get(0);
             L.remove(0);
-            graph.addFormulae(s, String.format("E %s U %s", prop1, prop2));
+            graph.addFormulae(s, String.format("EU %s %s", prop1, prop2));
             result.add(s);
             for (State predecessor : s.getPredecessors()) {
                 if (!seenBefore.contains(predecessor)) {
@@ -134,7 +134,7 @@ public class Algorithmer {
             State state = listStateProp2.get(0);
             listStateProp2.remove(0);
             result.add(state);
-            graph.addFormulae(state, String.format("A %s U %s", prop1, prop2));
+            graph.addFormulae(state, String.format("AU %s %s", prop1, prop2));
             for (State predecessor : state.getPredecessors()) {
                 predecessor.setDegree(predecessor.getDegree() - 1);
                 if (predecessor.getDegree() == 0 && predecessor.getFormulae().contains(prop1) && !result.contains(predecessor)) {
@@ -154,7 +154,7 @@ public class Algorithmer {
             State state = L.get(0);
             L.remove(0);
             result.add(state);
-            graph.addFormulae(state, String.format("E F %s", prop));
+            graph.addFormulae(state, String.format("EF %s", prop));
             for (State predecessor : state.getPredecessors()) {
                 if (!L.contains(predecessor) && !result.contains(predecessor)) {
                     L.add(predecessor);
@@ -168,12 +168,12 @@ public class Algorithmer {
     public static List<State> AF(Graph graph, String prop) {
         not(graph, prop);
         EG(graph, "not " + prop);
-        List<State> result = not(graph, "E G not " + prop);
+        List<State> result = not(graph, "EG %% " + prop);
 
-        for (State r: result) {
-            for (State s: graph.getStates()) {
+        for (State r : result) {
+            for (State s : graph.getStates()) {
                 if (s.equals(r)) {
-                    graph.addFormulae(s, String.format("A F %s", prop));
+                    graph.addFormulae(s, String.format("AF %s", prop));
                 }
             }
         }
@@ -184,12 +184,12 @@ public class Algorithmer {
     public static List<State> AG(Graph graph, String prop) {
         not(graph, prop);
         EF(graph, "not " + prop);
-        List<State> result = not(graph, "E F not " + prop);
+        List<State> result = not(graph, "EF %% " + prop);
 
-        for (State r: result) {
-            for (State s: graph.getStates()) {
+        for (State r : result) {
+            for (State s : graph.getStates()) {
                 if (s.equals(r)) {
-                    graph.addFormulae(s, String.format("A G %s", prop));
+                    graph.addFormulae(s, String.format("AG %s", prop));
                 }
             }
         }
@@ -202,12 +202,12 @@ public class Algorithmer {
         List<State> L;
         State s;
         boolean ok = true;
-        for (State state: graph.getStates()) {
+        for (State state : graph.getStates()) {
             if (state.getFormulae().contains(prop)) {
                 L = state.getSuccessors();
                 if (L.isEmpty() && !result.contains(state)) {
                     result.add(state);
-                    graph.addFormulae(state, String.format("E G %s", prop));
+                    graph.addFormulae(state, String.format("EG %s", prop));
                 }
                 seenBefore = new ArrayList<>();
                 while (!L.isEmpty()) {
@@ -216,16 +216,18 @@ public class Algorithmer {
                     ok = true;
                     if (s.getFormulae().contains(prop)) {
                         seenBefore.add(s);
-                        for (State successor: s.getSuccessors()) {
+                        for (State successor : s.getSuccessors()) {
                             ok = false;
                             if (!seenBefore.contains(successor)) {
                                 L.add(successor);
-                            } else { ok = true; }
+                            } else {
+                                ok = true;
+                            }
                         }
                         if (ok) {
                             if (!result.contains(state)) {
                                 result.add(state);
-                                graph.addFormulae(state, String.format("E G %s", prop));
+                                graph.addFormulae(state, String.format("EG %s", prop));
                             }
 
                         }
@@ -237,193 +239,68 @@ public class Algorithmer {
         return result;
     }
 
-    public static List<State> run(Graph graph, List<Object> formula) throws Exception {
-        //System.out.println("formula to run : " + formula);
-        List<State> result = new ArrayList<>();
+    public static String run(Graph graph, List<Object> formula) throws Exception {
 
-        Operator operator = (Operator) formula.get(0);
+        String prop1 = null;
+        String prop2 = null;
 
-        if (formula.size() == 2) {
-            formula = (List<Object>) formula.get(1);
+        if (formula.size() > 1) {
+            Operator operator = (Operator) formula.get(0);
 
-            Operator nextOperator = (Operator) formula.get(0);
+            for (int i = 1; i < formula.size(); i++) {
+                Object element = formula.get(i);
 
-            Object first;
-            Object second;
+                if (element instanceof ArrayList) {
+                    element = run(graph, (List<Object>) element);
+                    formula.set(i, element);
+                }
+
+                if (i == 1) {
+                    prop1 = (String) element;
+                } else {
+                    prop2 = (String) element;
+                }
+            }
+
             switch (operator.getOperator()) {
+                case "/\\":
+                    Algorithmer.and(graph, prop1, prop2);
+                    return String.format("%s %s %s", prop1, operator.getOperator(), prop2);
+                case "\\/":
+                    Algorithmer.or(graph, prop1, prop2);
+                    return String.format("%s %s %s", prop1, operator.getOperator(), prop2);
                 case "%":
-                    first = getElement(graph, formula.get(1));
-                    if (first instanceof Boolean) {
-                        if (!(Boolean) first) {
-                            result.add(new State("result"));
-                        }
-                    } else if (first instanceof String) {
-                        result = Algorithmer.not(graph, (String) first);
-                    } else {
-                        throw new Exception("first type not handled : " + first.getClass());
-                    }
-                    break;
-                case "E":
-                    switch (nextOperator.getOperator()) {
-                        case "X":
-                            first = getElement(graph, formula.get(1));
-                            if (first instanceof Boolean) {
-                                result.add(new State("exist"));
-                            } else if (first instanceof String) {
-                                result = Algorithmer.EX(graph, (String) first);
-                            } else {
-                                throw new Exception("first type not handled : " + first.getClass());
-                            }
-                            break;
-                        case "F":
-                            first = getElement(graph, formula.get(1));
-                            if (first instanceof Boolean) {
-                                result.add(new State("exist"));
-                            } else if (first instanceof String) {
-                                result = Algorithmer.EF(graph, (String) first);
-                            } else {
-                                throw new Exception("first type not handled : " + first.getClass());
-                            }
-                            break;
-                        case "U":
-                            first = getElement(graph, formula.get(1));
-                            second = getElement(graph, formula.get(2));
-                            if (first instanceof Boolean && second instanceof Boolean) {
-                                if ((Boolean) first && (Boolean) second) {
-                                    result.add(new State("result"));
-                                }
-                            } else if (first instanceof Boolean) {
-                                if ((Boolean) first && !Algorithmer.marking(graph, (String) second).isEmpty()) {
-                                    result.add(new State("result"));
-                                }
-                            } else if (second instanceof Boolean) {
-                                if (!Algorithmer.marking(graph, (String) first).isEmpty() && (Boolean) second) {
-                                    result.add(new State("result"));
-                                }
-                            } else if (first instanceof String && second instanceof String) {
-                                result = Algorithmer.EU(graph, (String) first, (String) second);
-                            } else {
-                                if (!(first instanceof String)) {
-                                    throw new Exception("first type not handled : " + first.getClass());
-                                } else if (!(second instanceof String)) {
-                                    throw new Exception("second type not handled : " + second.getClass());
-                                }
-                            }
-                            break;
-                        default:
-                            throw new Exception("Operator not handled : " + operator.getOperator());
-                    }
-                    break;
-                case "A":
-                    switch (nextOperator.getOperator()) {
-                        case "X":
-                            first = getElement(graph, formula.get(1));
-                            if (first instanceof Boolean) {
-                                result.add(new State("exist"));
-                            } else if (first instanceof String) {
-                                result = Algorithmer.AX(graph, (String) first);
-                            } else {
-                                throw new Exception("first type not handled : " + first.getClass());
-                            }
-                            break;
-                        case "F":
-                            first = getElement(graph, formula.get(1));
-                            if (first instanceof Boolean) {
-                                result.add(new State("exist"));
-                            } else if (first instanceof String) {
-                                result = Algorithmer.AF(graph, (String) first);
-                            } else {
-                                throw new Exception("first type not handled : " + first.getClass());
-                            }
-                            break;
-                        case "U":
-                            first = getElement(graph, formula.get(1));
-                            second = getElement(graph, formula.get(2));
-                            if (first instanceof Boolean && second instanceof Boolean) {
-                                if ((Boolean) first && (Boolean) second) {
-                                    result.add(new State("result"));
-                                }
-                            } else if (first instanceof Boolean) {
-                                if ((Boolean) first && !Algorithmer.marking(graph, (String) second).isEmpty()) {
-                                    result.add(new State("result"));
-                                }
-                            } else if (second instanceof Boolean) {
-                                if (!Algorithmer.marking(graph, (String) first).isEmpty() && (Boolean) second) {
-                                    result.add(new State("result"));
-                                }
-                            } else if (first instanceof String && second instanceof String) {
-                                result = Algorithmer.AU(graph, (String) first, (String) second);
-                            } else {
-                                if (!(first instanceof String)) {
-                                    throw new Exception("first type not handled : " + first.getClass());
-                                } else if (!(second instanceof String)) {
-                                    throw new Exception("second type not handled : " + second.getClass());
-                                }
-                            }
-                            break;
-                        default:
-                            throw new Exception("Operator not handled : " + operator.getOperator());
-                    }
-                    break;
-                default:
-                    throw new Exception("Operator not handled : " + operator.getOperator());
+                    Algorithmer.not(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
+                case "EX":
+                    Algorithmer.EX(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
+                case "AX":
+                    Algorithmer.AX(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
+                case "EF":
+                    Algorithmer.EF(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
+                case "AF":
+                    Algorithmer.AF(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
+                case "EU":
+                    Algorithmer.EU(graph, prop1, prop2);
+                    return String.format("%s %s %s", operator.getOperator(), prop1, prop2);
+                case "AU":
+                    Algorithmer.AU(graph, prop1, prop2);
+                    return String.format("%s %s %s", operator.getOperator(), prop1, prop2);
+                case "EG":
+                    Algorithmer.EG(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
+                case "AG":
+                    Algorithmer.AG(graph, prop1);
+                    return String.format("%s %s", operator.getOperator(), prop1);
             }
-
-        } else if (formula.size() == 3) {
-            Object first = getElement(graph, formula.get(1));
-            Object second = getElement(graph, formula.get(2));
-
-            if (operator.getOperator().equals("/\\")) {
-                if (first instanceof Boolean && second instanceof Boolean) {
-                    if ((Boolean) first && (Boolean) second) {
-                        result.add(new State("result"));
-                    }
-                } else if (first instanceof Boolean) {
-                    if ((Boolean) first && !Algorithmer.marking(graph, (String) second).isEmpty()) {
-                        result.add(new State("result"));
-                    }
-                } else if (second instanceof Boolean) {
-                    if (!Algorithmer.marking(graph, (String) first).isEmpty() && (Boolean) second) {
-                        result.add(new State("result"));
-                    }
-                } else {
-                    result = Algorithmer.and(graph, (String) first, (String) second);
-                }
-            } else if (operator.getOperator().equals("\\/")) {
-                if (first instanceof Boolean && second instanceof Boolean) {
-                    if ((Boolean) first || (Boolean) second) {
-                        result.add(new State("result"));
-                    }
-                } else if (first instanceof Boolean) {
-                    if ((Boolean) first || !Algorithmer.marking(graph, (String) second).isEmpty()) {
-                        result.add(new State("result"));
-                    }
-                } else if (second instanceof Boolean) {
-                    if (!Algorithmer.marking(graph, (String) first).isEmpty() || (Boolean) second) {
-                        result.add(new State("result"));
-                    }
-                } else {
-                    result = Algorithmer.or(graph, (String) first, (String) second);
-                }
-            } else {
-                throw new Exception("Operator not handled : " + operator.getOperator());
-            }
-
         } else {
-            throw new Exception("Formula size seems incorrect : " + formula.size());
+            return (String) formula.get(0);
         }
 
-        return result;
-    }
-
-    private static Object getElement(Graph graph, Object element) throws Exception {
-        if (element instanceof ArrayList) {
-            if (((ArrayList<?>) element).size() == 1) {
-                return ((ArrayList<?>) element).get(0);
-            } else {
-                return !run(graph, (List<Object>) element).isEmpty();
-            }
-        }
         return null;
     }
 }

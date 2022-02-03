@@ -24,6 +24,9 @@ public abstract class CTLParser {
             } else if ("\\".equals(element)) {
                 result.add(new Operator("\\/"));
                 index++;
+            } else if ("A".equals(element) || "E".equals(element)) {
+                result.add(new Operator(String.format("%s%s", element, elements[index + 1])));
+                index++;
             } else if ("(".equals(element) || ")".equals(element)) {
                 result.add(element);
             } else {
@@ -75,6 +78,10 @@ public abstract class CTLParser {
         Object second = null;
         Operator operator = null;
 
+        if (formula.size() == 1 && formula.get(0) instanceof String) {
+            return formula;
+        }
+
         if (element instanceof String) {
             if ("(".equals(element)) {
                 first = parseCTLFormula(getSubFormula(formula));
@@ -119,7 +126,7 @@ public abstract class CTLParser {
                     Object third = formula.get(2);
                     Object fourth = formula.get(3);
 
-                    if(third instanceof Operator && fourth instanceof String) {
+                    if (third instanceof Operator && fourth instanceof String) {
                         stack.add(operator);
                         if (first != null) {
                             stack.add(first);
