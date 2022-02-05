@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph("resources/k2.json");
 
-        String input = "E(a/\\b)U(c/\\d)";
+        String input = "%%a";
         List<Object> formula = CTLParser.parseStringFormula(input);
 
         System.out.println(formula);
