@@ -26,7 +26,7 @@ public class CTLFormulaTests {
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
-        assertEquals("[Operator{operator='E'}, [Operator{operator='X'}, a]]", result.toString());
+        assertEquals("[Operator{operator='EX'}, a]", result.toString());
     }
 
     @Test
@@ -71,7 +71,7 @@ public class CTLFormulaTests {
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
-        assertEquals("[Operator{operator='E'}, [Operator{operator='U'}, a, b]]", result.toString());
+        assertEquals("[Operator{operator='EU'}, a, b]", result.toString());
     }
 
     @Test
@@ -80,7 +80,43 @@ public class CTLFormulaTests {
 
         List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
 
-        assertEquals("[Operator{operator='E'}, [Operator{operator='U'}, a, [Operator{operator='/\\'}, b, c]]]", result.toString());
+        assertEquals("[Operator{operator='EU'}, a, [Operator{operator='/\\'}, b, c]]", result.toString());
+    }
+
+    @Test
+    public void testFormula9() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("E(a/\\b)Uc");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='EU'}, [Operator{operator='/\\'}, a, b], c]", result.toString());
+    }
+
+    @Test
+    public void testFormula10() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("E(a/\\b)U(c/\\d)");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='EU'}, [Operator{operator='/\\'}, a, b], [Operator{operator='/\\'}, c, d]]", result.toString());
+    }
+
+    @Test
+    public void testFormula11() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("AX(a\\/b)");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='AX'}, [Operator{operator='\\/'}, a, b]]", result.toString());
+    }
+
+    @Test
+    public void testFormula12() {
+        List<Object> parsedFormula = CTLParser.parseStringFormula("%(a\\/(b/\\c))");
+
+        List<Object> result = CTLParser.parseCTLFormula(parsedFormula);
+
+        assertEquals("[Operator{operator='%'}, [Operator{operator='\\/'}, a, [Operator{operator='/\\'}, b, c]]]", result.toString());
     }
 
     @Test

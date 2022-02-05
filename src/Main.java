@@ -11,15 +11,7 @@ public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph("resources/k2.json");
 
-        /*
-        System.out.println("%a\\/b -> " + CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%a\\/b")));
-        System.out.println("EX!a -> " + CTLParser.parseCTLFormula(CTLParser.parseStringFormula("EX!a")));
-        System.out.println("FX(a\\/b) -> " + CTLParser.parseCTLFormula(CTLParser.parseStringFormula("FX(a\\/b)")));
-        System.out.println("%(a\\/(b/\\c)) -> " + CTLParser.parseCTLFormula(CTLParser.parseStringFormula("%(a\\/(b/\\c))")));
-        */
-
-        String input = "c\\/d";
-        //String input = "aU(b\\/c)";
+        String input = "E(a/\\b)U(c/\\d)";
         List<Object> formula = CTLParser.parseStringFormula(input);
 
         System.out.println(formula);

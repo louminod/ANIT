@@ -25,8 +25,25 @@ public abstract class CTLParser {
                 result.add(new Operator("\\/"));
                 index++;
             } else if ("A".equals(element) || "E".equals(element)) {
-                result.add(new Operator(String.format("%s%s", element, elements[index + 1])));
-                index++;
+                String next = String.valueOf(elements[index + 1]);
+                if ("X".equals(next) || "F".equals(next) || "U".equals(next) || "G".equals(next)) {
+                    result.add(new Operator(String.format("%s%s", element, elements[index + 1])));
+                    index++;
+                } else {
+                    List<String> sub = new ArrayList<>();
+                    String firstPartOperator = element;
+                    index++;
+                    do {
+                        sub.add(next);
+                        index++;
+                        next = String.valueOf(elements[index]);
+                    } while (!"X".equals(next) && !"F".equals(next) && !"U".equals(next) && !"G".equals(next));
+
+                    Operator operator = new Operator(String.format("%s%s", firstPartOperator, next));
+
+                    result.add(operator);
+                    result.addAll(parseStringFormula(sub.toString().replace("[", "").replace("]", "").replace(", ", "")));
+                }
             } else if ("(".equals(element) || ")".equals(element)) {
                 result.add(element);
             } else {
@@ -70,7 +87,7 @@ public abstract class CTLParser {
     }
 
     public static List<Object> parseCTLFormula(List<Object> formula) {
-        // System.out.printf("Evaluating %s\n", formula);
+        //System.out.printf("Evaluating %s\n", formula);
         List<Object> stack = new ArrayList<>();
 
         Object element = formula.get(0);
@@ -120,11 +137,46 @@ public abstract class CTLParser {
             } else {
                 if ("(".equals(second)) {
                     second = parseCTLFormula(getSubFormula(formula.subList(1, formula.size())));
+                    List<Object> newFormula = new ArrayList<>();
+                    newFormula.addAll(formula.subList(0, 1));
+                    newFormula.add(second);
+
+                    int counter = -1;
+                    int index = 0;
+                    for (int i = 1; i < formula.size(); i++) {
+                        Object e = formula.get(i);
+                        if ("(".equals(e)) {
+                            counter++;
+                        } else if (")".equals(e)) {
+                            if (counter == 0) {
+                                index += 2;
+                                break;
+                            } else {
+                                counter--;
+                            }
+                        }
+                        index = i;
+                    }
+                    newFormula.addAll(formula.subList(index, formula.size()));
+
+                    formula = newFormula;
                 }
 
-                if (formula.size() >= 4) {
+                if (formula.size() >= 3) {
                     Object third = formula.get(2);
-                    Object fourth = formula.get(3);
+
+                    if ("(".equals(third)) {
+                        third = parseCTLFormula(getSubFormula(formula.subList(2, formula.size())));
+                        List<Object> newFormula = new ArrayList<>();
+                        newFormula.addAll(formula.subList(0, 2));
+                        newFormula.add(third);
+                        formula = newFormula;
+                    }
+
+                    Object fourth = null;
+                    if (formula.size() >= 4) {
+                        fourth = formula.get(3);
+                    }
 
                     if (third instanceof Operator && fourth instanceof String) {
                         stack.add(operator);
@@ -138,7 +190,14 @@ public abstract class CTLParser {
                             fourth = parseCTLFormula(getSubFormula(formula.subList(3, formula.size())));
                         }
                         sub.add(fourth);
+
                         stack.add(sub);
+                    } else {
+                        if (fourth == null) {
+                            stack.add(operator);
+                            stack.add(second);
+                            stack.add(third);
+                        }
                     }
                 } else {
                     stack.add(operator);
