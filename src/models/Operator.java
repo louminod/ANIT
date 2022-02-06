@@ -13,8 +13,6 @@ public class Operator {
 
     @Override
     public String toString() {
-        return "Operator{" +
-                "operator='" + operator + '\'' +
-                '}';
+        return "Operator{" + "operator='" + operator + '\'' + '}';
     }
 }
