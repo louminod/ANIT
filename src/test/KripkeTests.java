@@ -22,7 +22,7 @@ public class KripkeTests {
         for (String p : props) {
             prop.append(p);
         }
-        assertEquals("ab!c", String.valueOf(prop));
+        assertEquals("ab", String.valueOf(prop));
     }
 
     @Test

@@ -13,12 +13,12 @@
     },
     {
       "name":"S2",
-      "propositions":["!a", "b"],
+      "propositions":["b"],
       "successors":["S5", "S6"]
     },
     {
       "name":"S3",
-      "propositions":["a", "!b"],
+      "propositions":["a"],
       "successors":[]
     },
     {
@@ -33,7 +33,7 @@
     },
     {
       "name":"S6",
-      "propositions":["a", "!b"],
+      "propositions":["a"],
       "successors":[]
     }
   ]

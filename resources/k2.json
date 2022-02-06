@@ -8,37 +8,37 @@
     },
     {
       "name":"S1",
-      "propositions":["!a","b", "!c","d"],
+      "propositions":["b", "d"],
       "successors":["S4"]
     },
     {
       "name":"S2",
-      "propositions":["a","!b", "c","!d"],
+      "propositions":["a", "c"],
       "successors":["S3"]
     },
     {
       "name":"S3",
-      "propositions":["!a","b", "c","!d"],
+      "propositions":["b", "c"],
       "successors":["S1", "S5"]
     },
     {
       "name":"S4",
-      "propositions":["!a","!b", "!c","d"],
+      "propositions":["d"],
       "successors":["S6"]
     },
     {
       "name":"S5",
-      "propositions":["!a","!b", "!c","!d"],
+      "propositions":[],
       "successors":["S7"]
     },
     {
       "name":"S6",
-      "propositions":["a","b", "!c","d"],
+      "propositions":["a", "b", "d"],
       "successors":["S8"]
     },
     {
       "name":"S7",
-      "propositions":["a","b", "!c","d"],
+      "propositions":["a","b","d"],
       "successors":["S6"]
     },
     {
