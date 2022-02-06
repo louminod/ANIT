@@ -70,18 +70,6 @@ public class Graph {
         }
     }
 
-    public void addFormulae(State s, String formulae) {
-        int pos = 0;
-        State changed = s;
-        changed.addFormulae(formulae);
-        for (State state: states) {
-            if (state.equals(s)) {
-                states.set(pos, changed);
-            }
-            pos += 1;
-        }
-    }
-
     public List<State> getStates() {
         return states;
     }

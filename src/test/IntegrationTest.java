@@ -109,7 +109,7 @@ public class IntegrationTest {
 
         String result = Algorithmer.run(graph, parsedFormula);
 
-        assertTrue(graph.getInitial().getFormulae().contains(result));
+        assertFalse(graph.getInitial().getFormulae().contains(result));
     }
 
     @Test

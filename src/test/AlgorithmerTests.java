@@ -137,7 +137,7 @@ public class AlgorithmerTests {
         Graph graph = new Graph("resources/k2.json");
         Algorithmer.not(graph, "b");
 
-        List<State> result = Algorithmer.EF(graph, "%% b");
+        List<State> result = Algorithmer.EF(graph, "% b");
         List<State> expected = new ArrayList<>();
 
         expected.add(graph.getStates().get(0));
