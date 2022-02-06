@@ -1,0 +1,15 @@
+a
+a/\\b
+a\\/b
+%%a
+EXa
+EFa
+EGa
+EaUb
+AXa
+AFa
+AGa
+AaUb
+(a/\\b)\\/c
+EaU(b\\/c)
+AG(b\/(EF%c))
