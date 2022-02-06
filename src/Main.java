@@ -6,23 +6,21 @@ import tools.CTLParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Graph graph = new Graph("resources/k2.json");
 
-        String input = "%%a";
+        String input = "(a/\\b)\\/c";
+        System.out.println("Evaluating " + input);
         List<Object> formula = CTLParser.parseStringFormula(input);
-
-        System.out.println(formula);
 
         if (CTLParser.checkFormulaValidity(formula)) {
             List<Object> parsedFormula = CTLParser.parseCTLFormula(formula);
-            System.out.println(input + " -> " + parsedFormula);
 
             try {
                 String result = Algorithmer.run(graph, parsedFormula);
-                System.out.println(graph.getInitial().getFormulae());
 
                 System.out.println("RESULT -> " + graph.getInitial().getFormulae().contains(result));
             } catch (Exception e) {
