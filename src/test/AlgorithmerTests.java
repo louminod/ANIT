@@ -37,7 +37,7 @@ public class AlgorithmerTests {
     public void testAnd() {
         Graph graph = new Graph("resources/k1.json");
 
-        List<State> result = Algorithmer.and(graph, "b", "!c");
+        List<State> result = Algorithmer.and(graph, "b", "%c");
         List<State> expected = graph.getStates().subList(1, 3);
 
         assert (result.containsAll(expected));
@@ -48,7 +48,7 @@ public class AlgorithmerTests {
     public void testOr() {
         Graph graph = new Graph("resources/k1.json");
 
-        List<State> result = Algorithmer.or(graph, "a", "!c");
+        List<State> result = Algorithmer.or(graph, "a", "%c");
         List<State> expected = graph.getStates().subList(1, 3);
 
         assert (result.containsAll(expected));
@@ -137,7 +137,7 @@ public class AlgorithmerTests {
         Graph graph = new Graph("resources/k2.json");
         Algorithmer.not(graph, "b");
 
-        List<State> result = Algorithmer.EF(graph, "not b");
+        List<State> result = Algorithmer.EF(graph, "%% b");
         List<State> expected = new ArrayList<>();
 
         expected.add(graph.getStates().get(0));

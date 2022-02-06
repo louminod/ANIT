@@ -3,17 +3,17 @@
   "states":[
     {
       "name":"S0",
-      "propositions":["b", "c"],
+      "propositions":["%a","b", "c"],
       "successors":["S1", "S2"]
     },
     {
       "name":"S1",
-      "propositions":["a", "b"],
+      "propositions":["a", "b", "%c"],
       "successors":["S2"]
     },
     {
       "name":"S2",
-      "propositions":["b"],
+      "propositions":["%a","b", "%c"],
       "successors":["S0"]
     }
   ]

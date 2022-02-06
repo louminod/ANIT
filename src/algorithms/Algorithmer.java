@@ -167,7 +167,7 @@ public class Algorithmer {
 
     public static List<State> AF(Graph graph, String prop) {
         not(graph, prop);
-        EG(graph, "not " + prop);
+        EG(graph, "%% " + prop);
         List<State> result = not(graph, "EG %% " + prop);
 
         for (State r : result) {
@@ -183,7 +183,7 @@ public class Algorithmer {
 
     public static List<State> AG(Graph graph, String prop) {
         not(graph, prop);
-        EF(graph, "not " + prop);
+        EF(graph, "%% " + prop);
         List<State> result = not(graph, "EF %% " + prop);
 
         for (State r : result) {
